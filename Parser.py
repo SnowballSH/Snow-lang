@@ -3,6 +3,10 @@ from nodes import *
 COMPS = ("==", "!=", ">", "<", ">=", "<=")
 
 
+def not_none(current):
+    return current is not None and current[0] != "EOF"
+
+
 class Parser:
     def __init__(self, tokens: iter):
         self.tokens = iter(tokens)
@@ -17,15 +21,15 @@ class Parser:
 
     def raise_syntax_error(self, message=None):
         if message is None:
-            message = "Invalid Syntax: " + str(self.current[1])
-        raise Exception(message)
+            message = str(self.current[1])
+        raise SyntaxError(message)
 
     def parse(self):
         if self.current is None:
             return None
 
         res = []
-        while self.current is not None:
+        while not_none(self.current):
             res.append(self.expr())
 
         return res
@@ -41,16 +45,16 @@ class Parser:
                 self.next()
                 return GetNode(self.expr())
 
-            if crr == "let":
+            if crr == "var":
                 self.next()
                 if self.current[0] != "ID":
-                    self.raise_syntax_error()
+                    self.raise_syntax_error(f"Expected identifier, but got '{self.current[1]}'")
 
                 name = self.current
 
                 self.next()
                 if self.current[0] != "SYM" or self.current[1] != "=":
-                    self.raise_syntax_error()
+                    self.raise_syntax_error(f"Expected '=', but got '{self.current[1]}'")
 
                 self.next()
                 value = self.expr()
@@ -59,8 +63,9 @@ class Parser:
 
             if crr == "def":
                 self.next()
+
                 if self.current[0] != "ID":
-                    self.raise_syntax_error()
+                    self.raise_syntax_error(f"Expected identifier, but got '{self.current[1]}'")
                 name = self.current
 
                 self.next()
@@ -68,25 +73,34 @@ class Parser:
                 if self.current[0] == "BR" and self.current[1] == "(":
                     self.next()
                     paras = []
-                    while self.current is not None and not (self.current[0] == "BR" and self.current[1] == ")"):
+                    while not_none(self.current) and not (self.current[0] == "BR" and self.current[1] == ")"):
                         paras.append(self.current)
                         self.next()
                         if self.current[0] == "SYM" and self.current[1] == ",":
                             self.next()
                     if self.current[0] == "BR" and self.current[1] == ")":
                         self.next()
+
+                        if not (self.current[0] == "BR" and self.current[1] == "{"):
+                            self.raise_syntax_error("Expected '{'"f", but got '{self.current[1]}'")
+                        self.next()
+
                         body = [self.expr()]
-                        while self.current is not None and not (self.current[0] == "KW" and self.current[1] == "end"):
+                        while not_none(self.current) and not (self.current[0] == "BR" and self.current[1] == "}"):
                             body.append(self.expr())
+                        if not (self.current[0] == "BR" and self.current[1] == "}"):
+                            self.raise_syntax_error("Expected '}'"f", but got '{self.current[1]}'")
                         self.next()
                         return FuncAssignNode(name, paras, body)
                     else:
-                        raise SyntaxError("Invalid Syntax")
+                        self.raise_syntax_error(f"Expected closing parenthesis ')', but got '{self.current[1]}'")
+                else:
+                    self.raise_syntax_error(f"Expected '(', but got '{self.current[1]}'")
 
             if crr == "import":
                 self.next()
                 if self.current[0] != "ID":
-                    self.raise_syntax_error()
+                    self.raise_syntax_error(f"Expected identifier, but got '{self.current[1]}'")
                 name = self.current
 
                 self.next()
@@ -100,12 +114,12 @@ class Parser:
 
         res = self.term()
 
-        while self.current is not None and self.current[0] == "OP" and self.current[1] in ("+", "-"):
+        while not_none(self.current) and self.current[0] == "OP" and self.current[1] in ("+", "-"):
             op = self.current
             self.next()
             res = OpNode(res, op, self.expr())
 
-        while self.current is not None and self.current[0] == "SYM" and self.current[1] in COMPS:
+        while not_none(self.current) and self.current[0] == "SYM" and self.current[1] in COMPS:
             op = self.current
             self.next()
             res = CompNode(res, op, self.expr())
@@ -114,7 +128,7 @@ class Parser:
 
     def term(self):
         res = self.factor()
-        while self.current is not None and self.current[0] == "OP" and self.current[1] in ("*", "/"):
+        while not_none(self.current) and self.current[0] == "OP" and self.current[1] in ("*", "/"):
             op = self.current
             self.next()
             res = OpNode(res, op, self.factor())
@@ -128,7 +142,7 @@ class Parser:
             self.next()
             res = self.expr()
             if not (self.current[0] == "BR" and self.current[1] == ")"):
-                self.raise_syntax_error()
+                self.raise_syntax_error(f"Expected closing parenthesis ')', but got '{self.current[1]}'")
 
             self.next()
             return res
@@ -144,10 +158,10 @@ class Parser:
         if self.current[0] == "ID":
             access = self.current
             self.next()
-            if self.current is not None and self.current[0] == "BR" and self.current[1] == "(":
+            if not_none(self.current) and self.current[0] == "BR" and self.current[1] == "(":
                 self.next()
                 res = []
-                while self.current is not None and not (self.current[0] == "BR" and self.current[1] == ")"):
+                while not_none(self.current) and not (self.current[0] == "BR" and self.current[1] == ")"):
                     res.append(self.expr())
                     if self.current[0] == "SYM" and self.current[1] == ",":
                         self.next()
@@ -155,7 +169,7 @@ class Parser:
                     self.next()
                     return FuncAccessNode(access, res)
                 else:
-                    raise SyntaxError("Invalid Syntax")
+                    self.raise_syntax_error(f"Expected closing parenthesis ')', but got '{self.current[1]}'")
             else:
                 return VarAccessNode(access)
 
@@ -163,4 +177,4 @@ class Parser:
             self.next()
             return UnaryOpNode(tok, self.factor())
 
-        self.raise_syntax_error()
+        self.raise_syntax_error(f"Expected expression, got {self.current[1]}")

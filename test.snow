@@ -1,1 +1,1 @@
-def try(p)put p+get"> "end try("got:")
+def try(p){put p+get"> "}try("got:")

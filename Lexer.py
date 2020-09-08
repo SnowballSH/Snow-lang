@@ -1,8 +1,8 @@
 WHITESPACE = [" ", "\t", "\n"]
 OPERATORS = "+-*/"
-BRACKETS = "()"
+BRACKETS = "(){}"
 SYMBOLS = ("=", "!", ">", "<", ",")
-KEYWORDS = ["put", "get", "let", "def", "import", "end"]
+KEYWORDS = ["put", "get", "var", "def", "import"]
 
 
 class Lexer:
@@ -45,6 +45,7 @@ class Lexer:
                 yield "SYM", a
             else:
                 raise SyntaxError("Invalid Character: " + self.current)
+        yield "EOF", "None"
 
     def get_id(self):
         alphas = self.current
