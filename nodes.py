@@ -26,6 +26,24 @@ class StringNode:
 
 
 @dataclass
+class BoolNode:
+    def __init__(self, value):
+        self.value = [True, False][value == "False"]
+
+    def __repr__(self):
+        return str(self.value)
+
+
+@dataclass
+class NullNode:
+    def __init__(self):
+        self.value = None
+
+    def __repr__(self):
+        return str(self.value)
+
+
+@dataclass
 class CompNode:
     left: any
     op: any
@@ -104,3 +122,21 @@ class FuncAssignNode:
 
     def __repr__(self):
         return f"assign {self.name[1]} ({self.parameters}) => {self.call}"
+
+
+@dataclass
+class AnonFuncAssignNode:
+    name: any
+    parameters: any
+    call: any
+
+    def __repr__(self):
+        return f"({self.parameters}) => {self.call}"
+
+
+@dataclass
+class GiveNode:
+    expr: any
+
+    def __repr__(self):
+        return f"gives {self.expr}"

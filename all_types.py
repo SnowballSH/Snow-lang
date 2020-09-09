@@ -28,14 +28,23 @@ class String(SnowObject):
         return str(self.value)
 
 
-class Boolean(SnowObject):
+class Boolean(Number):
     def __init__(self, value: any):
-        super().__init__()
+        super().__init__(int(value))
         self.type = "bool"
-        self.value = bool(value)
 
     def __repr__(self):
-        return str(self.value)
+        return str(bool(self.value))
+
+
+class Null(SnowObject):
+    def __init__(self):
+        super().__init__()
+        self.value = None
+        self.type = "null"
+
+    def __repr__(self):
+        return "Null"
 
 
 class Function(SnowObject):

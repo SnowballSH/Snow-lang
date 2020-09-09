@@ -8,13 +8,20 @@ class UndefinedError(Exception):
     pass
 
 
+def is_num(left=0, right=0):
+    return type(left) in [float, int] and type(right) in [float, int]
+
+
 class Interpreter:
     def __init__(self):
-        self.tree = {}
+        self.tree = {"merge": PythonFunction("merge", ["a", "b"], lambda a, b: str(a) + str(b))}
 
     def run(self, nodes):
         for n in nodes:
-            self.visit(n)
+            a = self.visit(n)
+            if type(n).__name__ == "GiveNode":
+                return a
+        return Number(float("nan"))
 
     def visit(self, node):
         type_ = type(node).__name__
@@ -30,7 +37,8 @@ class Interpreter:
             return Number(float("nan"))
 
         if type_ == "PutNode":
-            print(self.visit(node.expr))
+            expr = self.visit(node.expr)
+            print(expr)
             return Number(float("nan"))
 
         if type_ == "GetNode":
@@ -57,6 +65,12 @@ class Interpreter:
             self.tree.update({node.name[1]: Function(name, paras, call)})
             return Number(float("nan"))
 
+        if type_ == "AnonFuncAssignNode":
+            name = node.name
+            paras = node.parameters
+            call = node.call
+            return Function(name, paras, call)
+
         if type_ == "FuncAccessNode":
             name = node.name[1]
             if name not in self.tree:
@@ -70,16 +84,27 @@ class Interpreter:
                 inter.tree = deepcopy(self.tree)
                 for i, p in enumerate(pars):
                     inter.tree.update({func.parameters[i][1]: self.visit(p)})
-                return inter.run(func.call)
+                c = inter.run(func.call)
+                return c
 
             new = [self.visit(p) for p in pars]
             return func.call(*new)
+
+        if type_ == "GiveNode":
+            expr = node.expr
+            return self.visit(expr)
 
         if type_ == "NumberNode":
             return Number(node.value)
 
         if type_ == "StringNode":
             return String(node.value)
+
+        if type_ == "BoolNode":
+            return Boolean(node.value)
+
+        if type_ == "NullNode":
+            return Null()
 
         if type_ == "CompNode":
             left = self.visit(node.left).value
@@ -102,21 +127,21 @@ class Interpreter:
             right = self.visit(node.right).value
             op = node.op[1]
             if op == "+":
-                if type(left) == type(right) == int:
+                if is_num(left, right):
                     return Number(left + right)
                 if type(left) == type(right) == str:
                     return String(left + right)
                 raise TypeError(f"unsupported operand type(s) for +: {type(left).__name__} and {type(right).__name__}")
             if op == "-":
-                if type(left) == type(right) == int:
+                if is_num(left, right):
                     return Number(left - right)
                 raise TypeError(f"unsupported operand type(s) for -: {type(left).__name__} and {type(right).__name__}")
             if op == "*":
-                if type(left) == type(right) == int:
+                if is_num(left, right):
                     return Number(left * right)
                 raise TypeError(f"unsupported operand type(s) for *: {type(left).__name__} and {type(right).__name__}")
             if op == "/":
-                if type(left) == type(right) == int:
+                if is_num(left, right):
                     return Number(left / right)
                 raise TypeError(f"unsupported operand type(s) for /: {type(left).__name__} and {type(right).__name__}")
             raise Exception("broken")
@@ -125,11 +150,11 @@ class Interpreter:
             op = node.op[1]
             right = self.visit(node.right).value
             if op == "+":
-                if type(right) == int:
+                if is_num(right=right):
                     return Number(+ right)
                 raise TypeError(f"unsupported operand type for unary +: {type(right).__name__}")
             if op == "-":
-                if type(right) == int:
+                if is_num(right=right):
                     return Number(- right)
                 raise TypeError(f"unsupported operand type for unary -: {type(right).__name__}")
             if op == "!":

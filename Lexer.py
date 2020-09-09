@@ -2,7 +2,9 @@ WHITESPACE = [" ", "\t", "\n"]
 OPERATORS = "+-*/"
 BRACKETS = "(){}"
 SYMBOLS = ("=", "!", ">", "<", ",")
-KEYWORDS = ["put", "get", "var", "def", "import"]
+BOOLS = ("True", "False")
+NULLTYPE = ("Null",)
+KEYWORDS = ["put", "get", "var", "def", "give", "import"]
 
 
 class Lexer:
@@ -40,7 +42,6 @@ class Lexer:
                 yield self.get_br()
             elif self.current in SYMBOLS:
                 a = self.current
-                self.next()
                 a = self.get_comp(a)
                 yield "SYM", a
             else:
@@ -57,11 +58,16 @@ class Lexer:
         if alphas in KEYWORDS:
             return "KW", alphas
 
+        elif alphas in BOOLS:
+            return "BOOL", alphas
+        elif alphas in NULLTYPE:
+            return "NULL", alphas
+
         return "ID", alphas
 
     def get_num(self):
         nums = self.current
-        dot = False
+        dot = nums == "."
         self.next()
         while self.current is not None and (self.current.isdigit() or self.current == "."):
             if self.current == ".":
@@ -88,6 +94,17 @@ class Lexer:
         return "STRING", string
 
     def get_comp(self, sym):
+        if sym == "=":
+            self.next()
+            if self.current == ">":
+                self.next()
+                return "=>"
+            if self.current == "=":
+                self.next()
+                return sym + "="
+            else:
+                return sym
+        self.next()
         if self.current == "=":
             self.next()
             return sym + "="

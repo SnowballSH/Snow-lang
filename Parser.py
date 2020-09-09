@@ -64,9 +64,15 @@ class Parser:
             if crr == "def":
                 self.next()
 
+                name = ""
                 if self.current[0] != "ID":
-                    self.raise_syntax_error(f"Expected identifier, but got '{self.current[1]}'")
-                name = self.current
+                    if self.current[0] == "OP" and self.current[1] == "*":
+                        name = "<anonymous>"
+                    else:
+
+                        self.raise_syntax_error(f"Expected identifier, but got '{self.current[1]}'")
+                else:
+                    name = self.current
 
                 self.next()
 
@@ -88,14 +94,24 @@ class Parser:
                         body = [self.expr()]
                         while not_none(self.current) and not (self.current[0] == "BR" and self.current[1] == "}"):
                             body.append(self.expr())
+
                         if not (self.current[0] == "BR" and self.current[1] == "}"):
                             self.raise_syntax_error("Expected '}'"f", but got '{self.current[1]}'")
                         self.next()
-                        return FuncAssignNode(name, paras, body)
+
+                        if name != "<anonymous>":
+                            return FuncAssignNode(name, paras, body)
+
+                        return AnonFuncAssignNode(name, paras, body)
+
                     else:
                         self.raise_syntax_error(f"Expected closing parenthesis ')', but got '{self.current[1]}'")
                 else:
                     self.raise_syntax_error(f"Expected '(', but got '{self.current[1]}'")
+
+            if crr == "give":
+                self.next()
+                return GiveNode(self.expr())
 
             if crr == "import":
                 self.next()
@@ -117,7 +133,8 @@ class Parser:
         while not_none(self.current) and self.current[0] == "OP" and self.current[1] in ("+", "-"):
             op = self.current
             self.next()
-            res = OpNode(res, op, self.expr())
+            ex = self.factor()
+            res = OpNode(res, op, ex)
 
         while not_none(self.current) and self.current[0] == "SYM" and self.current[1] in COMPS:
             op = self.current
@@ -150,6 +167,14 @@ class Parser:
         if tok[0] == "NUMBER":
             self.next()
             return NumberNode(tok[1])
+
+        if tok[0] == "BOOL":
+            self.next()
+            return BoolNode(tok[1])
+
+        if tok[0] == "NULL":
+            self.next()
+            return NullNode()
 
         if tok[0] == "STRING":
             self.next()
