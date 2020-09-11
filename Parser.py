@@ -144,6 +144,39 @@ class Parser:
                 self.next()
                 return IfNode(cond, then, else_, mode="KW")
 
+            if crr == "for":
+                var, stop, action, body = [None]*4
+                self.next()
+                if self.current[0] == "BR" and self.current[1] == "(":
+                    self.next()
+                    var = self.expr()
+                    if type(var) != VarAssignNode:
+                        self.raise_syntax_error("Expected Var Assignment, got others")
+                    stop = self.expr()
+                    action = self.expr()
+
+                    if self.current[0] == "BR" and self.current[1] == ")":
+                        self.next()
+
+                        if not (self.current[0] == "BR" and self.current[1] == "{"):
+                            self.raise_syntax_error("Expected '{'"f", but got '{self.current[1]}'")
+                        self.next()
+
+                        body = [self.expr()]
+                        while not_none(self.current) and not (self.current[0] == "BR" and self.current[1] == "}"):
+                            body.append(self.expr())
+
+                        if not (self.current[0] == "BR" and self.current[1] == "}"):
+                            self.raise_syntax_error("Expected '}'"f", but got '{self.current[1]}'")
+                        self.next()
+
+                    else:
+                        self.raise_syntax_error(f"Expected closing parenthesis ')', but got '{self.current[1]}'")
+                else:
+                    self.raise_syntax_error(f"Expected '(', but got '{self.current[1]}'")
+
+                return ForNode(var, stop, action, body)
+
             if crr == "give":
                 self.next()
                 return GiveNode(self.expr())
@@ -157,6 +190,7 @@ class Parser:
                 self.next()
 
                 return ImportNode(name)
+
         elif self.current[0] == "SYM":
             crr = self.current[1]
             if crr == "?":
@@ -235,7 +269,14 @@ class Parser:
 
         if self.current[0] == "ID":
             access = self.current
+
             self.next()
+            if self.current[0] == "SYM" and self.current[1] == "=":
+                self.next()
+                value = self.expr()
+
+                return VarAssignNode(access, value)
+
             if not_none(self.current) and self.current[0] == "BR" and self.current[1] == "(":
                 self.next()
                 res = []

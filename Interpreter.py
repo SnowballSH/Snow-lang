@@ -14,7 +14,8 @@ def is_num(left=0, right=0):
 
 class Interpreter:
     def __init__(self):
-        self.tree = {"merge": PythonFunction("merge", ["a", "b"], lambda a, b: str(a) + str(b))}
+        self.tree = {}
+        self.import_package("types")
 
     def run(self, nodes):
         for n in nodes:
@@ -23,16 +24,19 @@ class Interpreter:
                 return a
         return
 
+    def import_package(self, name):
+        try:
+            package = lib.get[name]
+        except KeyError:
+            raise ImportError(f"Package not found: {name}")
+
+        for m in package:
+            self.tree.update({m[0]: PythonFunction(m[0], m[1], m[2])})
+
     def visit(self, node):
         type_ = type(node).__name__
         if type_ == "ImportNode":
-            try:
-                package = lib.get[node.package[1]]
-            except ImportError:
-                raise ImportError(f"Package not found: {node.package[1]}")
-
-            for m in package:
-                self.tree.update({m[0]: PythonFunction(m[0], m[1], m[2])})
+            self.import_package(node.package[1])
             return
 
         if type_ == "PutNode":
@@ -45,7 +49,7 @@ class Interpreter:
             return String(x)
 
         if type_ == "IfNode":
-            cond, then, else_, mode = node.cond, node.then, node.else_, node.mode
+            cond, then, else_, mode = vars(node).values()
             ans = Null()
             if self.visit(cond).value:
                 for a in then:
@@ -55,6 +59,16 @@ class Interpreter:
                     for a in else_:
                         ans = self.visit(a)
             return ans if mode == "?" else None
+
+        if type_ == "ForNode":
+            var, stop, action, body = vars(node).values()
+            self.visit(var)
+            while self.visit(stop).value:
+                for b in body:
+                    self.visit(b)
+                self.visit(action)
+
+            return
 
         if type_ == "VarAssignNode":
             value = node.value

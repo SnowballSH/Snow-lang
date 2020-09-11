@@ -100,6 +100,17 @@ class IfNode:
 
 
 @dataclass
+class ForNode:
+    var: any
+    stop: any
+    action: any
+    body: any
+
+    def __repr__(self):
+        return f"for ({self.var} {self.stop} {self.action}) do {self.body}"
+
+
+@dataclass
 class VarAssignNode:
     name: any
     value: any
