@@ -21,7 +21,7 @@ class Interpreter:
             a = self.visit(n)
             if type(n).__name__ == "GiveNode":
                 return a
-        return Number(float("nan"))
+        return
 
     def visit(self, node):
         type_ = type(node).__name__
@@ -33,23 +33,34 @@ class Interpreter:
 
             for m in package:
                 self.tree.update({m[0]: PythonFunction(m[0], m[1], m[2])})
-
-            return Number(float("nan"))
+            return
 
         if type_ == "PutNode":
             expr = self.visit(node.expr)
             print(expr)
-            return Number(float("nan"))
+            return
 
         if type_ == "GetNode":
             x = input(self.visit(node.expr))
             return String(x)
 
+        if type_ == "IfNode":
+            cond, then, else_, mode = node.cond, node.then, node.else_, node.mode
+            ans = Null()
+            if self.visit(cond).value:
+                for a in then:
+                    ans = self.visit(a)
+            else:
+                if else_ is not None:
+                    for a in else_:
+                        ans = self.visit(a)
+            return ans if mode == "?" else None
+
         if type_ == "VarAssignNode":
             value = node.value
             value = self.visit(value)
             self.tree.update({node.name[1]: value})
-            return Number(float("nan"))
+            return
 
         if type_ == "VarAccessNode":
             name = node.name[1]
@@ -63,7 +74,7 @@ class Interpreter:
             paras = node.parameters
             call = node.call
             self.tree.update({node.name[1]: Function(name, paras, call)})
-            return Number(float("nan"))
+            return
 
         if type_ == "AnonFuncAssignNode":
             name = node.name

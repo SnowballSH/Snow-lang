@@ -109,6 +109,41 @@ class Parser:
                 else:
                     self.raise_syntax_error(f"Expected '(', but got '{self.current[1]}'")
 
+            if crr == "if":
+                self.next()
+                cond = self.expr()
+
+                if not (self.current[0] == "BR" and self.current[1] == "{"):
+                    self.raise_syntax_error("Expected '{'"f", but got '{self.current[1]}'")
+                self.next()
+
+                then = []
+                while not_none(self.current) and not (self.current[0] == "KW" and self.current[1] == "else") and not (
+                        self.current[0] == "BR" and self.current[1] == "}"):
+                    then.append(self.expr())
+
+                if len(then) == 0:
+                    self.raise_syntax_error("Expected expression, got None")
+
+                if self.current[0] == "BR" and self.current[1] == "}":
+                    self.next()
+                    return IfNode(cond, then)
+
+                self.next()
+
+                else_ = []
+                while not_none(self.current) and not (self.current[0] == "BR" and self.current[1] == "}"):
+                    else_.append(self.expr())
+
+                if len(else_) == 0:
+                    self.raise_syntax_error("Expected expression, got None")
+
+                if not (self.current[0] == "BR" and self.current[1] == "}"):
+                    self.raise_syntax_error("Expected '}'"f", but got '{self.current[1]}'")
+
+                self.next()
+                return IfNode(cond, then, else_, mode="KW")
+
             if crr == "give":
                 self.next()
                 return GiveNode(self.expr())
@@ -122,6 +157,24 @@ class Parser:
                 self.next()
 
                 return ImportNode(name)
+        elif self.current[0] == "SYM":
+            crr = self.current[1]
+            if crr == "?":
+                self.next()
+                cond = self.expr()
+
+                if not (self.current[0] == "BR" and self.current[1] == "{"):
+                    self.raise_syntax_error("Expected '{'"f", but got '{self.current[1]}'")
+                self.next()
+
+                then = [self.factor()]
+                else_ = [self.factor()]
+
+                if not (self.current[0] == "BR" and self.current[1] == "}"):
+                    self.raise_syntax_error("Expected '}'"f", but got '{self.current[1]}'")
+
+                self.next()
+                return IfNode(cond, then, else_, mode="?")
 
     def expr(self):
         kw = self.kw()

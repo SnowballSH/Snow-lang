@@ -1,10 +1,11 @@
 WHITESPACE = [" ", "\t", "\n"]
 OPERATORS = "+-*/"
 BRACKETS = "(){}"
-SYMBOLS = ("=", "!", ">", "<", ",")
+SYMBOLS = ("=", "!", ">", "<", ",", "?")
 BOOLS = ("True", "False")
 NULLTYPE = ("Null",)
-KEYWORDS = ["put", "get", "var", "def", "give", "import"]
+KEYWORDS = ["put", "get", "var", "def", "give", "import",
+            "if", "else"]
 
 
 class Lexer:

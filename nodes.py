@@ -89,6 +89,17 @@ class GetNode:
 
 
 @dataclass
+class IfNode:
+    cond: any
+    then: any
+    else_: any = None
+    mode: any = None
+
+    def __repr__(self):
+        return f"if {self.cond} do {self.then} else {self.else_}"
+
+
+@dataclass
 class VarAssignNode:
     name: any
     value: any
