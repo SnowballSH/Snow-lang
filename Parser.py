@@ -214,6 +214,13 @@ class Parser:
                 self.next()
                 return IfNode(cond, then, else_, mode="?")
 
+    def call_method(self, parent):
+        while not_none(self.current) and self.current[0] == "SYM" and self.current[1] == ".":
+            self.next()
+            parent = AccessMethodNode(parent, self.factor())
+
+        return parent
+
     def expr(self):
         kw = self.kw()
         if kw is not None:
@@ -261,15 +268,15 @@ class Parser:
 
         if tok[0] == "BOOL":
             self.next()
-            return BoolNode(tok[1])
+            return self.call_method(BoolNode(tok[1]))
 
         if tok[0] == "NULL":
             self.next()
-            return NullNode()
+            return self.call_method(NullNode())
 
         if tok[0] == "STRING":
             self.next()
-            return StringNode(tok[1])
+            return self.call_method(StringNode(tok[1]))
 
         if self.current[0] == "ID":
             access = self.current
@@ -290,11 +297,11 @@ class Parser:
                         self.next()
                 if self.current[0] == "BR" and self.current[1] == ")":
                     self.next()
-                    return FuncAccessNode(access, res)
+                    return self.call_method(FuncAccessNode(access, res))
                 else:
                     self.raise_syntax_error(f"Expected closing parenthesis ')', but got '{self.current[1]}'")
             else:
-                return VarAccessNode(access)
+                return self.call_method(VarAccessNode(access))
 
         if (tok[0] == "OP" and tok[1] in ("+", "-")) or (tok[0] == "SYM" and tok[1] in ("!",)):
             self.next()

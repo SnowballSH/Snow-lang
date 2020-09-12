@@ -75,11 +75,24 @@ class Interpreter:
 
             return
 
+        if type_ == "AccessMethodNode":
+            parent, child = node.parent, node.child
+            a = self.visit(parent)
+            inter = Interpreter()
+            inter.tree = deepcopy(self.tree)
+            try:
+                inter.tree.update(a.methods)
+            except AttributeError as e:
+                raise AttributeError(f"BROKEN {e}")
+            try:
+                return inter.visit(child)
+            except UndefinedError as e:
+                raise AttributeError(e)
+
         if type_ == "VarAssignNode":
             value = node.value
             value = self.visit(value)
             self.tree.update({node.name[1]: value})
-            return
 
         if type_ == "VarAccessNode":
             name = node.name[1]

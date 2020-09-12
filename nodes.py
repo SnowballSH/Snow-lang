@@ -122,6 +122,15 @@ class BreakNode:
 
 
 @dataclass
+class AccessMethodNode:
+    parent: any
+    child: any
+
+    def __repr__(self):
+        return f"{self.parent}.{self.child}"
+
+
+@dataclass
 class VarAssignNode:
     name: any
     value: any

@@ -1,7 +1,7 @@
 WHITESPACE = [" ", "\t", "\n"]
 OPERATORS = "+-*/"
 BRACKETS = "(){}"
-SYMBOLS = ("=", "!", ">", "<", ",", "?")
+SYMBOLS = ("=", "!", ">", "<", ",", "?", ".")
 BOOLS = ("True", "False")
 NULLTYPE = ("Null",)
 KEYWORDS = ["put", "get", "var", "def", "give", "import",
@@ -35,7 +35,7 @@ class Lexer:
                 yield self.get_id()
             elif self.current == '"':
                 yield self.get_str()
-            elif self.current.isdigit() or self.current == ".":
+            elif self.current.isdigit():
                 yield self.get_num()
             elif self.current in OPERATORS:
                 yield self.get_op()
@@ -68,7 +68,7 @@ class Lexer:
 
     def get_num(self):
         nums = self.current
-        dot = nums == "."
+        dot = False
         self.next()
         while self.current is not None and (self.current.isdigit() or self.current == "."):
             if self.current == ".":

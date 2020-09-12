@@ -39,4 +39,4 @@ def lint(filename):
 
 if __name__ == "__main__":
     run("test.snow")
-    print(lint("test.snow"))
+    # print(lint("test.snow"))

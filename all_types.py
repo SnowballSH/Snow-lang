@@ -1,6 +1,6 @@
 class SnowObject:
     def __init__(self):
-        self.methods = []
+        self.methods = {}
         self.type = None
         self.value = None
 
@@ -13,6 +13,7 @@ class Number(SnowObject):
         super().__init__()
         self.type = "int"
         self.value = value
+        self.methods.update({"to_s": PythonFunction("to_s", [], lambda: String(str(self.value)))})
 
     def __repr__(self):
         return str(self.value)
@@ -23,6 +24,11 @@ class String(SnowObject):
         super().__init__()
         self.type = "str"
         self.value = value
+        self.methods.update({"repeat": PythonFunction("repeat", ["times"], lambda t: String(self.value * t.value)),
+                        "reverse": PythonFunction("reverse", [], lambda: String(self.value[::-1])),
+                        "replace": PythonFunction("replace", ["old", "new"],
+                                                  lambda old, new: String(self.value.replace(old.value, new.value))),
+                        "len": Number(len(self.value))})
 
     def __repr__(self):
         return str(self.value)
