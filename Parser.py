@@ -127,7 +127,7 @@ class Parser:
 
                 if self.current[0] == "BR" and self.current[1] == "}":
                     self.next()
-                    return IfNode(cond, then)
+                    return IfNode(cond, then, mode="KW")
 
                 self.next()
 
@@ -180,6 +180,10 @@ class Parser:
             if crr == "give":
                 self.next()
                 return GiveNode(self.expr())
+
+            if crr == "break":
+                self.next()
+                return BreakNode()
 
             if crr == "import":
                 self.next()

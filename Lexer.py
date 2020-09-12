@@ -5,7 +5,7 @@ SYMBOLS = ("=", "!", ">", "<", ",", "?")
 BOOLS = ("True", "False")
 NULLTYPE = ("Null",)
 KEYWORDS = ["put", "get", "var", "def", "give", "import",
-            "if", "else", "for"]
+            "if", "else", "for", "break"]
 
 
 class Lexer:

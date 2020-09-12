@@ -58,14 +58,19 @@ class Interpreter:
                 if else_ is not None:
                     for a in else_:
                         ans = self.visit(a)
-            return ans if mode == "?" else None
+            return ans if mode == "?" else None if ans != "Break" else ans
 
         if type_ == "ForNode":
             var, stop, action, body = vars(node).values()
             self.visit(var)
             while self.visit(stop).value:
+                n = None
                 for b in body:
-                    self.visit(b)
+                    n = self.visit(b)
+                    if n == "Break":
+                        break
+                if n == "Break":
+                    break
                 self.visit(action)
 
             return
@@ -118,6 +123,9 @@ class Interpreter:
         if type_ == "GiveNode":
             expr = node.expr
             return self.visit(expr)
+
+        if type_ == "BreakNode":
+            return "Break"
 
         if type_ == "NumberNode":
             return Number(node.value)

@@ -22,7 +22,7 @@ class StringNode:
     value: str
 
     def __repr__(self):
-        return str(self.value)
+        return str('"' + self.value + '"')
 
 
 @dataclass
@@ -50,7 +50,7 @@ class CompNode:
     right: any
 
     def __repr__(self):
-        return f"({self.left} {self.op[1]} {self.right})"
+        return f"({self.left}{self.op[1]}{self.right})"
 
 
 @dataclass
@@ -60,7 +60,7 @@ class OpNode:
     right: any
 
     def __repr__(self):
-        return f"({self.left} {self.op[1]} {self.right})"
+        return f"({self.left}{self.op[1]}{self.right})"
 
 
 @dataclass
@@ -96,7 +96,12 @@ class IfNode:
     mode: any = None
 
     def __repr__(self):
-        return f"if {self.cond} do {self.then} else {self.else_}"
+        if self.mode == "KW":
+            return f"if {self.cond}""{"f"{' '.join(repr(a) for a in self.then)}" + \
+                   (f" else {' '.join(repr(a) for a in self.else_)}" if self.else_ else "") + "}"
+        else:
+            return f"?{self.cond}""{"f"{' '.join(repr(a) for a in self.then)} {' '.join(repr(a) for a in self.else_)}"\
+                   "}"
 
 
 @dataclass
@@ -107,7 +112,13 @@ class ForNode:
     body: any
 
     def __repr__(self):
-        return f"for ({self.var} {self.stop} {self.action}) do {self.body}"
+        return f"for({self.var} {self.stop} {self.action})""{"f"{' '.join(repr(a) for a in self.body)}""}"
+
+
+@dataclass
+class BreakNode:
+    def __repr__(self):
+        return f"break"
 
 
 @dataclass
@@ -116,7 +127,7 @@ class VarAssignNode:
     value: any
 
     def __repr__(self):
-        return f"assign {self.name[1]} = {self.value}"
+        return f"{self.name[1]}={self.value}"
 
 
 @dataclass
@@ -124,7 +135,7 @@ class VarAccessNode:
     name: any
 
     def __repr__(self):
-        return f"access {self.name[1]}"
+        return f"{self.name[1]}"
 
 
 @dataclass
@@ -133,7 +144,7 @@ class FuncAccessNode:
     parameters: any
 
     def __repr__(self):
-        return f"access {self.name[1]} ({self.parameters})"
+        return f"{self.name[1]}({' '.join(repr(a) for a in self.parameters)})"
 
 
 @dataclass
@@ -143,7 +154,8 @@ class FuncAssignNode:
     call: any
 
     def __repr__(self):
-        return f"assign {self.name[1]} ({self.parameters}) => {self.call}"
+        return f"def {self.name[1]}({' '.join(repr(a) for a in self.parameters)}) ""{"\
+               f"{' '.join(repr(a) for a in self.call)}""}"
 
 
 @dataclass
@@ -153,7 +165,7 @@ class AnonFuncAssignNode:
     call: any
 
     def __repr__(self):
-        return f"({self.parameters}) => {self.call}"
+        return f"def *({' '.join(repr(a) for a in self.parameters)}) ""{"f"{' '.join(repr(a) for a in self.call)}""}"
 
 
 @dataclass
@@ -161,4 +173,4 @@ class GiveNode:
     expr: any
 
     def __repr__(self):
-        return f"gives {self.expr}"
+        return f"give {self.expr}"
