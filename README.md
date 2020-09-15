@@ -1,1 +1,2 @@
-"# Snopphire" 
+Snow Programming Language to write short codes
+===============================================

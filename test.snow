@@ -1,1 +1,1 @@
-put "A weird long term results in length: " + "sff".repeat(True*7).reverse().replace("sf", "apple").len.to_s()
+put 1 + 2 + 3 + 4
