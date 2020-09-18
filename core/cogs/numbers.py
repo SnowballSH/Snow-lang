@@ -1,4 +1,7 @@
-def get_num(self):
+from ..lexer.tokens import Token
+
+
+def get_num(self) -> Token:
     """
     Gets the num
     :param self: Lexer
@@ -9,9 +12,9 @@ def get_num(self):
         num += self.current
         self.next()
 
-    return int(num) if num else None
+    return Token("int", int(num)) if num else None
 
 
-def lex(self):
+def lex(self) -> Token:
     res = get_num(self)
     return res
