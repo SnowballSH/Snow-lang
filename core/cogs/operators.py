@@ -1,1 +1,2 @@
-
+def lex(self):
+    return
