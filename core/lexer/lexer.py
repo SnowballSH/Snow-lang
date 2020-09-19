@@ -1,10 +1,12 @@
-from ..cogs import numbers, operators
+from ..cogs import numbers, operators, identifier
+from ..errors.error import *
 from .tokens import Token
 
 """All cogs"""
 cogs = [
     numbers,
     operators,
+    identifier,
 ]
 
 
@@ -73,6 +75,6 @@ class Lexer:
             if valid:
                 continue
 
-            raise Exception(f"Invalid character: {self.current}")
+            return None, SnowError.InvalidCharError(self.tp)
 
         return tokens, None
