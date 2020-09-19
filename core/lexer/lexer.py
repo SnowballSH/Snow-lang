@@ -37,15 +37,12 @@ class Lexer:
 
         except StopIteration:  # If reaches the end
             self.current = None
-            self.tokens.append(Token("EOF", None, self.tp, self.tp))
 
     def lex(self):
         """
         Analyzes the code
         :return: list[tokens.Token]
         """
-
-        tokens = []
 
         while self.current is not None:
             valid = False
@@ -68,7 +65,7 @@ class Lexer:
                 if res is not None:
                     if res.type == "ERROR":
                         return None, res.value
-                    tokens.append(res)
+                    self.tokens.append(res)
                     valid = True
                     break
 
@@ -77,4 +74,5 @@ class Lexer:
 
             return None, SnowError.InvalidCharError(self.tp)
 
-        return tokens, None
+        self.tokens.append(Token("EOF", None, self.tp, self.tp))
+        return self.tokens, None
