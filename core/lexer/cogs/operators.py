@@ -1,4 +1,4 @@
-from ..lexer.tokens import Token
+from ..tokens import Token
 
 ref = {"+": "ADD", "-": "MIN", "*": "MUL", "/": "DIV"}
 

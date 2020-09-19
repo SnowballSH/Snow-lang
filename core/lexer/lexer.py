@@ -1,4 +1,4 @@
-from ..cogs import numbers, operators, identifier
+from .cogs import numbers, operators, identifier
 from ..errors.error import *
 from .tokens import Token
 

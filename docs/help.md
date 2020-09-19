@@ -5,19 +5,19 @@
 
 #### Structure
 * core - main code folder
-   * cogs - add-ons
-      * identifier.py
-      * keywords.py
-      * numbers.py
-      * operators.py
    * compiler - run the file
-      * compiler.py
+       * compiler.py
    * errors - all custom errors
-      * error.py
-      * pointer.py
+       * error.py
+       * pointer.py
    * lexer - the lexer
-      * lexer.py
-      * tokens.py
+       * cogs - add-ons
+          * identifier.py
+          * keywords.py
+          * numbers.py
+          * operators.py
+       * lexer.py
+       * tokens.py
    * parser - the parser
-      * parser.py
-      * nodes.py
+       * parser.py
+       * nodes.py

@@ -1,5 +1,5 @@
-from ..lexer.tokens import Token
-from ..errors.error import SnowError
+from ..tokens import Token
+from ...errors.error import SnowError
 
 
 def get_num(self) -> Token:

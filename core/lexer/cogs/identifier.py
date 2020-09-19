@@ -1,4 +1,4 @@
-from ..lexer.tokens import Token
+from ..tokens import Token
 from .keywords import keywords
 
 import string
