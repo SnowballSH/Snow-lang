@@ -69,6 +69,18 @@ class Parser:
     def factor(self):
         current = self.current
 
+        if current.type == "LPAREN":
+            self.next()
+            res, e = self.expr()
+            if e:
+                return None, e
+
+            if self.current.type != "RPAREN":
+                return None, SnowError.SyntaxError(self.current.start)
+
+            self.next()
+            return res, None
+
         if current.type in ("INT", "FLOAT"):
             self.next()
             return NumberNode(current.value, current.start, current.end), None

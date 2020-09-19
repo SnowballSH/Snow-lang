@@ -1,7 +1,13 @@
 from ..tokens import Token
-from .keywords import keywords
 
+import json
 import string
+import pathlib
+d = pathlib.Path(__file__).parent.absolute()
+
+
+with open(f"{d}\\keywords.json", "r") as f:
+    keywords = json.load(f)
 
 
 def lex(self) -> Token or None:
