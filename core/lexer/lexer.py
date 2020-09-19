@@ -18,6 +18,7 @@ class Lexer:
         self.text = iter(text)
         self.pos = -1  # current position in the line
         self.line = 1  # current line
+        self.tp = (self.line, self.pos)
         self.current = None
 
         self.next()
@@ -30,10 +31,11 @@ class Lexer:
         try:
             self.current = next(self.text)
             self.pos += 1
+            self.tp = (self.line, self.pos)
 
         except StopIteration:  # If reaches the end
             self.current = None
-            self.tokens.append(Token("EOF", None))
+            self.tokens.append(Token("EOF", None, self.tp, self.tp))
 
     def lex(self):
         """
@@ -62,6 +64,8 @@ class Lexer:
             for cog in cogs:
                 res = cog.lex(self)
                 if res is not None:
+                    if res.type == "ERROR":
+                        return None, res.value
                     tokens.append(res)
                     valid = True
                     break
@@ -71,6 +75,4 @@ class Lexer:
 
             raise Exception(f"Invalid character: {self.current}")
 
-
-
-        return tokens
+        return tokens, None

@@ -5,3 +5,5 @@ from dataclasses import dataclass
 class Token:
     type: str
     value: any
+    start: tuple
+    end: tuple
