@@ -13,9 +13,10 @@
    * lexer - the lexer
        * cogs - add-ons
           * identifier.py
-          * keywords.py
+          * keywords.json
           * numbers.py
           * operators.py
+          * symbols.py
        * lexer.py
        * tokens.py
    * parser - the parser

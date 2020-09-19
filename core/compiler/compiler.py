@@ -1,5 +1,6 @@
 from ..lexer.lexer import Lexer
 from ..parser.parser import Parser
+from ..interpreter.interpreter import Interpreter
 from ..errors.pointer import point
 
 
@@ -25,4 +26,13 @@ def run(file):
         print(f"<{file}> " + repr(error))
         return
 
-    print("\n".join(map(repr, nodes)))
+    inter = Interpreter(nodes)
+    res = inter.run()
+    res, error = res
+
+    if error:
+        print(point(code, error.pos))
+        print(f"<{file}> " + repr(error))
+        return
+
+    # print(res)

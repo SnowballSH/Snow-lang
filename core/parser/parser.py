@@ -30,6 +30,14 @@ class Parser:
         return self.nodes, None
 
     def expr(self):
+        if self.current.type == "KEYWORD":
+            if self.current.value == "out":
+                start = self.current.start
+                self.next()
+                res, e = self.layer_1()
+                if e:
+                    return None, e
+                return OutNode(res, start, res.end), None
         return self.layer_1()
 
     def layer_1(self):

@@ -24,6 +24,17 @@ class IdentifierNode(Node):
         return f"{self.value}"
 
 
+class OutNode(Node):
+    def __init__(self, child, start, end):
+        self.child = child
+        self.start = start
+        self.end = end
+        self.type = "Out"
+
+    def __repr__(self):
+        return f"output {self.child}"
+
+
 class OperationNode(Node):
     def __init__(self, left, op, right):
         self.left = left
