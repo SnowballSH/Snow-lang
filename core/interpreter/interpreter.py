@@ -1,6 +1,13 @@
 from .types import *
 from ..errors.error import *
 
+import os
+d = os.getcwd()
+
+stdout = open(f"{d}\\snow.stdout", "w")
+
+stderr = open(f"{d}\\snow.stderr", "w")
+
 
 class Interpreter:
     def __init__(self, nodes):
@@ -25,7 +32,7 @@ class Interpreter:
             res, e = self.visit(node.child)
             if e:
                 return None, e
-            print(res.value)
+            print(res.value, file=stdout)
             return None, None
 
         if node.type == "Number":

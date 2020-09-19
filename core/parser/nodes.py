@@ -32,7 +32,7 @@ class OutNode(Node):
         self.type = "Out"
 
     def __repr__(self):
-        return f"output {self.child}"
+        return f"{self.child}"
 
 
 class OperationNode(Node):

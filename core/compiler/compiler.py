@@ -3,6 +3,13 @@ from ..parser.parser import Parser
 from ..interpreter.interpreter import Interpreter
 from ..errors.pointer import point
 
+import os
+d = os.getcwd()
+
+stdout = open(f"{d}\\snow.stdout", "w")
+
+stderr = open(f"{d}\\snow.stderr", "w")
+
 
 def run(file):
     with open(file, "r") as f:
@@ -13,8 +20,8 @@ def run(file):
     tokens, error = res
 
     if error:
-        print(point(code, error.pos))
-        print(f"<{file}> " + repr(error))
+        print(point(code, error.pos), file=stderr)
+        print(f"<{file}> " + repr(error), file=stderr)
         return
 
     parser = Parser(tokens)
@@ -22,8 +29,8 @@ def run(file):
     nodes, error = res
 
     if error:
-        print(point(code, error.pos))
-        print(f"<{file}> " + repr(error))
+        print(point(code, error.pos), file=stderr)
+        print(f"<{file}> " + repr(error), file=stderr)
         return
 
     inter = Interpreter(nodes)
@@ -31,8 +38,8 @@ def run(file):
     res, error = res
 
     if error:
-        print(point(code, error.pos))
-        print(f"<{file}> " + repr(error))
+        print(point(code, error.pos), file=stderr)
+        print(f"<{file}> " + repr(error), file=stderr)
         return
 
     # print(res)
