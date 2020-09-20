@@ -3,7 +3,8 @@ from ..parser.parser import Parser
 from ..interpreter.interpreter import Interpreter
 from ..errors.pointer import point
 
-import os
+import os, sys
+
 d = os.getcwd()
 
 stdout = open(f"{d}\\snow.stdout", "w")
@@ -43,3 +44,12 @@ def run(file):
         return
 
     # print(res)
+
+
+if __name__ == "__main__":
+    n = len(sys.argv)
+    if n == 2:
+        run(sys.argv[1])
+
+    print("ran")
+    os.system("pause")

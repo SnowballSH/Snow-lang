@@ -1,0 +1,4 @@
+name: Snow_Lang
+
+dependencies:
+  path: ^1.7.0

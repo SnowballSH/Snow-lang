@@ -1,3 +1,0 @@
-out 1 - 8.33 * (5 -3.2) )
-                        ^
-<test.snow> Syntax Error: Invalid Syntax at line 2, char 24
