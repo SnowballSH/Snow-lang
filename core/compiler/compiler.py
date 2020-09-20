@@ -1,9 +1,11 @@
 from ..lexer.lexer import Lexer
 from ..parser.parser import Parser
-from ..interpreter.interpreter import Interpreter
+# from ..interpreter.interpreter import Interpreter
+from ..interpreter.c_inter import Interpreter
 from ..errors.pointer import point
 
-import os, sys
+import os
+import sys
 
 d = os.getcwd()
 
