@@ -1,7 +1,6 @@
 from ..lexer.lexer import Lexer
 from ..parser.parser import Parser
-# from ..interpreter.interpreter import Interpreter
-from ..interpreter.c_inter import Interpreter
+from ..interpreter.interpreter import Interpreter
 from ..errors.pointer import point
 
 import os
@@ -9,12 +8,8 @@ import sys
 
 d = os.getcwd()
 
-stdout = open(f"{d}\\snow.stdout", "w")
 
-stderr = open(f"{d}\\snow.stderr", "w")
-
-
-def run(file):
+def run_f(file, stdout, stderr):
     with open(file, "r") as f:
         code = f.read()
 
@@ -36,7 +31,7 @@ def run(file):
         print(f"<{file}> " + repr(error), file=stderr)
         return
 
-    inter = Interpreter(nodes)
+    inter = Interpreter(nodes, stdout)
     res = inter.run()
     res, error = res
 
@@ -45,7 +40,15 @@ def run(file):
         print(f"<{file}> " + repr(error), file=stderr)
         return
 
-    # print(res)
+
+def run(file):
+    stdout = open(f"{d}\\snow.stdout", "w")
+    stderr = open(f"{d}\\snow.stderr", "w")
+
+    run_f(file, stdout, stderr)
+
+    stdout.close()
+    stderr.close()
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
 from core.compiler.compiler import run
+from timeit import timeit
 
-run("test.snow")
+print(timeit(lambda: run("test.snow"), number=10))
