@@ -15,6 +15,14 @@ class SnowError:
         def __repr__(self):
             return f"Type Error: {self.message} at line {self.pos[0]}, char {self.pos[1]}"
 
+    class OverrideError:
+        def __init__(self, pos, message):
+            self.message = message
+            self.pos = pos
+
+        def __repr__(self):
+            return f"Override Error: {self.message} at line {self.pos[0]}, char {self.pos[1]}"
+
     class UndefinedError:
         def __init__(self, pos, message):
             self.message = message

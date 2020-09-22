@@ -1,8 +1,12 @@
 from dataclasses import dataclass
 
 
+class SnowType:
+    pass
+
+
 @dataclass
-class Number:
+class Number(SnowType):
     value: any
     start: any
     end: any
@@ -10,7 +14,7 @@ class Number:
 
 
 @dataclass
-class Void:
+class Void(SnowType):
     start: any
     end: any
     value: str = "Void"

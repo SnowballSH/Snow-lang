@@ -4,6 +4,7 @@ from .types import *
 from ..errors.error import *
 
 import os
+
 d = os.getcwd()
 
 
@@ -11,6 +12,7 @@ class Interpreter:
     def __init__(self, nodes, stdout, tree=None):
         if tree is None:
             self.tree = {}
+        self.builtin = {"Void": lambda *a: Void(*a)}
         self.stdout = stdout
         self.nodes = nodes
 
@@ -38,14 +40,20 @@ class Interpreter:
             return Void(node.start, res.end), None
 
         if node.type == "VarAccess":
-            if node.value not in self.tree:
+            if node.value in self.tree:
+                return self.tree[node.value], None
+            elif node.value in self.builtin:
+                x = self.builtin[node.value]
+                return x(node.start, node.end), None
+            else:
                 return None, SnowError.UndefinedError(node.start, node.value)
-            return self.tree[node.value], None
 
         if node.type == "VarAssign":
             res, e = self.visit(node.value)
             if e:
                 return None, e
+            if node.name in self.builtin.keys():
+                return None, SnowError.OverrideError(node.start, f"Cannot override builtin: '{node.name}'")
             self.tree[node.name] = res
             return Void(node.start, node.end), None
 

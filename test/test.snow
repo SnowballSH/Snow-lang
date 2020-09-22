@@ -1,2 +1,4 @@
-out (i := 3) + i * i
-out (i := i*i)
+df = 2
+_s = 3
+s_02 = 4
+out df + 3 + s_02
