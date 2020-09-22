@@ -49,12 +49,3 @@ def run(file):
 
     stdout.close()
     stderr.close()
-
-
-if __name__ == "__main__":
-    n = len(sys.argv)
-    if n == 2:
-        run(sys.argv[1])
-
-    print("ran")
-    os.system("pause")

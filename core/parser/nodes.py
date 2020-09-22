@@ -13,15 +13,39 @@ class NumberNode(Node):
         return f"{self.value}"
 
 
-class IdentifierNode(Node):
+class VarAccessNode(Node):
     def __init__(self, value, start, end):
         self.value = value
         self.start = start
         self.end = end
-        self.type = "Identifier"
+        self.type = "VarAccess"
 
     def __repr__(self):
         return f"{self.value}"
+
+
+class VarAssignNode(Node):
+    def __init__(self, name, value, start, end):
+        self.name = name
+        self.value = value
+        self.start = start
+        self.end = end
+        self.type = "VarAssign"
+
+    def __repr__(self):
+        return f"{self.name} = {self.value}"
+
+
+class WalrusVarAssignNode(Node):
+    def __init__(self, name, value, start, end):
+        self.name = name
+        self.value = value
+        self.start = start
+        self.end = end
+        self.type = "WalrusVarAssign"
+
+    def __repr__(self):
+        return f"{self.name} := {self.value}"
 
 
 class OutNode(Node):

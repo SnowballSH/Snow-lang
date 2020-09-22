@@ -8,7 +8,9 @@ d = os.getcwd()
 
 
 class Interpreter:
-    def __init__(self, nodes, stdout):
+    def __init__(self, nodes, stdout, tree=None):
+        if tree is None:
+            self.tree = {}
         self.stdout = stdout
         self.nodes = nodes
 
@@ -32,7 +34,27 @@ class Interpreter:
             if e:
                 return None, e
             print(res.value, file=self.stdout)
-            return None, None
+
+            return Void(node.start, res.end), None
+
+        if node.type == "VarAccess":
+            if node.value not in self.tree:
+                return None, SnowError.UndefinedError(node.start, node.value)
+            return self.tree[node.value], None
+
+        if node.type == "VarAssign":
+            res, e = self.visit(node.value)
+            if e:
+                return None, e
+            self.tree[node.name] = res
+            return Void(node.start, node.end), None
+
+        if node.type == "WalrusVarAssign":
+            res, e = self.visit(node.value)
+            if e:
+                return None, e
+            self.tree[node.name] = res
+            return res, None
 
         if node.type == "Number":
             return Number(node.value, node.start, node.end), None
@@ -47,25 +69,25 @@ class Interpreter:
                 return None, e
 
             if op.type == "ADD":
-                if isinstance(left.value, (int, float)) and isinstance(right.value, (int, float)):
+                if isinstance(left, Number) and isinstance(right, Number):
                     return Number(left.value + right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for +: {left.type} and {right.type}")
 
             if op.type == "MIN":
-                if isinstance(left.value, (int, float)) and isinstance(right.value, (int, float)):
+                if isinstance(left, Number) and isinstance(right, Number):
                     return Number(left.value - right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for -: {left.type} and {right.type}")
 
             if op.type == "MUL":
-                if isinstance(left.value, (int, float)) and isinstance(right.value, (int, float)):
+                if isinstance(left, Number) and isinstance(right, Number):
                     return Number(left.value * right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for *: {left.type} and {right.type}")
 
             if op.type == "DIV":
-                if isinstance(left.value, (int, float)) and isinstance(right.value, (int, float)):
+                if isinstance(left, Number) and isinstance(right, Number):
                     return Number(left.value / right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for /: {left.type} and {right.type}")

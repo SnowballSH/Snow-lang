@@ -94,7 +94,23 @@ class Parser:
             return NumberNode(current.value, current.start, current.end), None
 
         if current.type == "ID":
+            # Identifier
             self.next()
-            return IdentifierNode(current.value, current.start, current.end), None
+            name = current.value
+            if self.current.type == "EQ":
+                self.next()
+                value, e = self.expr()
+                if e:
+                    return None, e
+                return VarAssignNode(name, value, current.start, self.current.end), None
+
+            if self.current.type == "WALRUS":
+                self.next()
+                value, e = self.expr()
+                if e:
+                    return None, e
+                return WalrusVarAssignNode(name, value, current.start, self.current.end), None
+
+            return VarAccessNode(name, current.start, current.end), None
 
         return None, SnowError.SyntaxError(self.current.start)
