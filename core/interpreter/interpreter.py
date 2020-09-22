@@ -114,26 +114,28 @@ class Interpreter:
             if e:
                 return None, e
 
+            can_op = lambda n: isinstance(n, (Number, Bool))
+
             if op.type == "ADD":
-                if isinstance(left, Number) and isinstance(right, Number):
+                if can_op(left) and can_op(right):
                     return Number(left.value + right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for +: {left.type} and {right.type}")
 
             if op.type == "MIN":
-                if isinstance(left, Number) and isinstance(right, Number):
+                if can_op(left) and can_op(right):
                     return Number(left.value - right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for -: {left.type} and {right.type}")
 
             if op.type == "MUL":
-                if isinstance(left, Number) and isinstance(right, Number):
+                if can_op(left) and can_op(right):
                     return Number(left.value * right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for *: {left.type} and {right.type}")
 
             if op.type == "DIV":
-                if isinstance(left, Number) and isinstance(right, Number):
+                if can_op(left) and can_op(right):
                     return Number(left.value / right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for /: {left.type} and {right.type}")
