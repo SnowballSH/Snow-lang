@@ -2,6 +2,8 @@ from .nodes import *
 from ..lexer.tokens import Token
 from ..errors.error import *
 
+COMPARISONS = ("LT", "GT", "LTEQ", "GTEQ", "DBEQ", "NOTEQ")
+
 
 class Parser:
     def __init__(self, tokens):
@@ -34,11 +36,29 @@ class Parser:
             if self.current.value == "out":
                 start = self.current.start
                 self.next()
-                res, e = self.layer_1()
+                res, e = self.expr()
                 if e:
                     return None, e
                 return OutNode(res, start, res.end), None
-        return self.layer_1()
+
+        left, e = self.layer_1()
+        if e:
+            return None, e
+
+        if self.current.type in COMPARISONS:
+            l = []
+            while not self.eof() and self.current.type in COMPARISONS:
+                comp = self.current
+                self.next()
+                right, e = self.layer_1()
+                if e:
+                    return None, e
+                l.append(ComparisonNode(left, comp, right))
+                left = right
+
+            return CompListNode(l), None
+
+        return left, None
 
     def layer_1(self):
         left, e = self.layer_2()
@@ -89,10 +109,12 @@ class Parser:
             self.next()
             return res, None
 
+        # INT, FLOAT
         if current.type in ("INT", "FLOAT"):
             self.next()
             return NumberNode(current.value, current.start, current.end), None
 
+        # ID
         if current.type == "ID":
             # Identifier
             self.next()

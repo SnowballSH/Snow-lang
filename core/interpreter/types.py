@@ -14,6 +14,14 @@ class Number(SnowType):
 
 
 @dataclass
+class Bool(SnowType):
+    value: bool
+    start: any
+    end: any
+    type = "Bool"
+
+
+@dataclass
 class Void(SnowType):
     start: any
     end: any

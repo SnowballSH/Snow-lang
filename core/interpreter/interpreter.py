@@ -12,7 +12,8 @@ class Interpreter:
     def __init__(self, nodes, stdout, tree=None):
         if tree is None:
             self.tree = {}
-        self.builtin = {"Void": lambda *a: Void(*a)}
+        self.builtin = {"Void": lambda *a: Void(*a), "True": lambda *a: Bool(True, *a),
+                        "False": lambda *a: Bool(False, *a)}
         self.stdout = stdout
         self.nodes = nodes
 
@@ -66,6 +67,43 @@ class Interpreter:
 
         if node.type == "Number":
             return Number(node.value, node.start, node.end), None
+
+        if node.type == "Comparison":
+            left, comp, right = self.visit(node.left), node.comp, self.visit(node.right)
+            left, e = left
+            if e:
+                return None, e
+            right, e = right
+            if e:
+                return None, e
+
+            try:
+                if comp.type == "DBEQ":
+                    return Bool(left.value == right.value, left.start, right.end), None
+                if comp.type == "NOTEQ":
+                    return Bool(left.value != right.value, left.start, right.end), None
+                if comp.type == "LT":
+                    return Bool(left.value < right.value, left.start, right.end), None
+                if comp.type == "GT":
+                    return Bool(left.value > right.value, left.start, right.end), None
+                if comp.type == "LTEQ":
+                    return Bool(left.value <= right.value, left.start, right.end), None
+                if comp.type == "GTEQ":
+                    return Bool(left.value >= right.value, left.start, right.end), None
+            except TypeError:
+                return None, SnowError.TypeError(comp.start, f"Cannot use '{comp.value}' between type "
+                                                             f"'{left.type}' and '{right.type}'")
+
+        if node.type == "CompList":
+            children = node.children
+            for child in children:
+                res, e = self.visit(child)
+                if e:
+                    return None, e
+
+                if res.value is True:
+                    return Bool(True, node.start, node.end), None
+            return Bool(False, node.start, node.end), None
 
         if node.type == "Operation":
             op = node.op

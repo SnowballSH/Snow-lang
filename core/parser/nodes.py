@@ -69,4 +69,28 @@ class OperationNode(Node):
         self.type = "Operation"
 
     def __repr__(self):
-        return f"({self.left} {self.op.type} {self.right})"
+        return f"({self.left} {self.op.value} {self.right})"
+
+
+class ComparisonNode(Node):
+    def __init__(self, left, comp, right):
+        self.left = left
+        self.comp = comp
+        self.right = right
+        self.start = self.left.start
+        self.end = self.right.end
+        self.type = "Comparison"
+
+    def __repr__(self):
+        return f"({self.left} {self.comp.value} {self.right})"
+
+
+class CompListNode(Node):
+    def __init__(self, children):
+        self.children = children
+        self.start = self.children[0].start
+        self.end = self.children[-1].end
+        self.type = "CompList"
+
+    def __repr__(self):
+        return f"{' '.join(map(repr, self.children))}"
