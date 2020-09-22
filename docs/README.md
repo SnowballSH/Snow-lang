@@ -7,23 +7,17 @@
 Currently under development, can only do things basic now
 
 #### Tokens
-0-9.0-9: INT | FLOAT
-
-A-Za-z_: ID
-
-out    : OUT
-
-(      : LPAREN
-
-)      : RPAREN
-
-=      : EQ
-
-==     : DBEQ
-
-:      : COLON
-
-:=     : WALRUS
+| Chars    | Token Type   |
+|----------|--------------|
+| 0-9.0-9  | INT \| FLOAT |
+| A-Za-z_  | ID           |
+| (        | LPAREN       |
+| )        | RPAREN       |
+| =        | EQ           |
+| ==       | DBEQ         |
+| :        | COLON        |
+| :=       | WALRUS       |
+| keywords | KEYWORD      |
 
 
 #### Nodes
