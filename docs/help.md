@@ -4,6 +4,9 @@
 ***
 
 #### Structure
+* app - the app
+   * app - the main file with threads
+   
 * core - main code folder
    * compiler - run the file
        * compiler.py
@@ -22,3 +25,7 @@
    * parser - the parser
        * parser.py
        * nodes.py
+   * interpreter - the interpreter
+       * interpreter.py
+       * types.py
+   
