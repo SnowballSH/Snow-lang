@@ -1,1 +1,2 @@
 out (i := 3) + i * i
+out (i := i*i)
