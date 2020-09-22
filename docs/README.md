@@ -4,4 +4,4 @@
 ***
 
 #### Usage
-Currently under development, can only generate nodes for now.
+Currently under development, can only do things basic now
