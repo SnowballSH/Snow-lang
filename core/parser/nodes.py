@@ -72,6 +72,27 @@ class IfNode(Node):
         return f"if {self.cond} do {self.children} else do {self.else_children}"
 
 
+class LoopNode(Node):
+    def __init__(self, children, start, end):
+        self.children = children
+        self.start = start
+        self.end = end
+        self.type = "Loop"
+
+    def __repr__(self):
+        return f"loop {self.children}"
+
+
+class BreakNode(Node):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+        self.type = "Break"
+
+    def __repr__(self):
+        return f"break"
+
+
 class OperationNode(Node):
     def __init__(self, left, op, right):
         self.left = left

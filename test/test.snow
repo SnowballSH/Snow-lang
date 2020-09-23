@@ -1,11 +1,1 @@
-if 2-2 == True {  # simple if statement
-    out 1
-    out 2  # You can do multiple things
-} else {  # else statement
-    out 3
-    if 2 == 2*(False+1) {  # nested if statements
-        out 4
-    }
-}
-
-# Output: 5
+i=0loop{if i>5{break}else{out i+i*i i=i+1}}

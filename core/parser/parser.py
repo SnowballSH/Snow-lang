@@ -31,6 +31,8 @@ class Parser:
 
         return self.nodes, None
 
+    """EXPR"""
+
     def expr(self):
         if self.current.type == "KEYWORD":
             if self.current.value == "out":
@@ -91,11 +93,42 @@ class Parser:
 
                 return IfNode(cond, children, else_children, start, end), None
 
+            if self.current.value == "loop":
+                start = self.current.start
+                self.next()
+                if self.current.type != "LCURLY":
+                    return None, SyntaxError(self.current.start)
+
+                self.next()
+
+                children = []
+                while not self.eof() and self.current.type != "RCURLY":
+                    body, e = self.expr()
+                    if e:
+                        return None, e
+                    children.append(body)
+
+                if self.eof():
+                    return None, SnowError.SyntaxError(self.current.end)
+
+                end = self.current.end
+                self.next()
+
+                return LoopNode(children, start, end), None
+
+            if self.current.value == "break":
+                start = self.current.start
+                end = self.current.end
+                self.next()
+                return BreakNode(start, end), None
+
         res, e = self.comp()
         if e:
             return None, e
 
         return res, None
+
+    """COMP"""
 
     def comp(self):
         left, e = self.layer_1()
@@ -116,6 +149,8 @@ class Parser:
             return CompListNode(l), None
 
         return left, None
+
+    """LAYERS"""
 
     def layer_1(self):
         left, e = self.layer_2()
@@ -150,6 +185,8 @@ class Parser:
             left = OperationNode(left, op, right)
 
         return left, None
+
+    """FACTOR"""
 
     def factor(self):
         current = self.current

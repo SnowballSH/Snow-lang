@@ -17,6 +17,8 @@ class Interpreter:
         self.stdout = stdout
         self.nodes = nodes
 
+        self.to_break = False
+
     def run(self):
         res = None
         for node in self.nodes:
@@ -58,6 +60,25 @@ class Interpreter:
                     if e:
                         return None, e
 
+            return Void(node.start, node.end), None
+
+        if node.type == "Loop":
+            while True:
+                for child in node.children:
+                    res, e = self.visit(child)
+                    if e:
+                        return None, e
+                    if self.to_break:
+                        break
+
+                if self.to_break:
+                    self.to_break = False
+                    break
+
+            return Void(node.start, node.end), None
+
+        if node.type == "Break":
+            self.to_break = True
             return Void(node.start, node.end), None
 
         if node.type == "VarAccess":
