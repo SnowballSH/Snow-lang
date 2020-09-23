@@ -17,6 +17,12 @@ Currently under development, can only do things basic now
 | ==       | DBEQ         |
 | :        | COLON        |
 | :=       | WALRUS       |
+| >        | GT           |
+| <        | LT           |
+| >=       | GTEQ         |
+| <=       | LTEQ         |
+| !        | NOT          |
+| !=       | NOTEQ        |
 | keywords | KEYWORD      |
 
 
