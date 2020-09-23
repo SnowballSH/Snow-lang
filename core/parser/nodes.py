@@ -56,7 +56,19 @@ class OutNode(Node):
         self.type = "Out"
 
     def __repr__(self):
-        return f"{self.child}"
+        return f"output {self.child}"
+
+
+class IfNode(Node):
+    def __init__(self, cond, children, start, end):
+        self.cond = cond
+        self.children = children
+        self.start = start
+        self.end = end
+        self.type = "If"
+
+    def __repr__(self):
+        return f"if {self.cond} do {self.children}"
 
 
 class OperationNode(Node):

@@ -40,7 +40,41 @@ class Parser:
                 if e:
                     return None, e
                 return OutNode(res, start, res.end), None
+            if self.current.value == "if":
+                start = self.current.start
+                self.next()
 
+                cond, e = self.comp()
+                if e:
+                    return None, e
+
+                if self.current.type != "LCURLY":
+                    return None, SyntaxError(self.current.start)
+
+                self.next()
+
+                children = []
+                while not self.eof() and self.current.type != "RCURLY":
+                    body, e = self.expr()
+                    if e:
+                        return None, e
+                    children.append(body)
+
+                if self.eof():
+                    return None, SnowError.SyntaxError(self.current.end)
+
+                end = self.current.end
+                self.next()
+
+                return IfNode(cond, children, start, end), None
+
+        res, e = self.comp()
+        if e:
+            return None, e
+
+        return res, None
+
+    def comp(self):
         left, e = self.layer_1()
         if e:
             return None, e

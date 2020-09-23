@@ -1,7 +1,8 @@
 from ..tokens import Token
 
 ref = {"(": "LPAREN", ")": "RPAREN", "=": "EQ", "==": "DBEQ", ":=": "WALRUS", ":": "COLON", "<": "LT", ">": "GT",
-       "<-": "LARROW", "->": "RARROW", "<=": "LTEQ", ">=": "GTEQ", "!": "NOT", "!=": "NOTEQ"}
+       "<-": "LARROW", "->": "RARROW", "<=": "LTEQ", ">=": "GTEQ", "!": "NOT", "!=": "NOTEQ", "{": "LCURLY",
+       "}": "RCURLY"}
 
 
 def make_sym(self, sym):

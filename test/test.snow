@@ -1,1 +1,4 @@
-out (b:= 2==2) + 1
+if 2-1 == True {
+    out 3
+    out True
+}
