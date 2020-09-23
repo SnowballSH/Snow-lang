@@ -1,4 +1,11 @@
-if 2-1 == True {
+if 2-2 == True {  # simple if statement
+    out 1
+    out 2  # You can do multiple things
+} else {  # else statement
     out 3
-    out True
+    if 2 == 2*(False+1) {  # nested if statements
+        out 4
+    }
 }
+
+# Output: 5

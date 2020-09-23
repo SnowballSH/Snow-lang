@@ -40,6 +40,26 @@ class Interpreter:
 
             return Void(node.start, res.end), None
 
+        if node.type == "If":
+            cond, children, else_children = node.cond, node.children, node.else_children
+            cond, e = self.visit(cond)
+            if e:
+                return None, e
+
+            if cond.value:
+                for child in children:
+                    res, e = self.visit(child)
+                    if e:
+                        return None, e
+
+            elif else_children is not None:
+                for child in else_children:
+                    res, e = self.visit(child)
+                    if e:
+                        return None, e
+
+            return Void(node.start, node.end), None
+
         if node.type == "VarAccess":
             if node.value in self.tree:
                 return self.tree[node.value], None

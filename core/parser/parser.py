@@ -66,7 +66,30 @@ class Parser:
                 end = self.current.end
                 self.next()
 
-                return IfNode(cond, children, start, end), None
+                if self.current.type == "KEYWORD" and self.current.value == "else":
+                    self.next()
+                    if self.current.type != "LCURLY":
+                        return None, SyntaxError(self.current.start)
+
+                    self.next()
+
+                    else_children = []
+                    while not self.eof() and self.current.type != "RCURLY":
+                        body, e = self.expr()
+                        if e:
+                            return None, e
+                        else_children.append(body)
+
+                    if self.eof():
+                        return None, SnowError.SyntaxError(self.current.end)
+
+                    end = self.current.end
+                    self.next()
+
+                else:
+                    else_children = None
+
+                return IfNode(cond, children, else_children, start, end), None
 
         res, e = self.comp()
         if e:

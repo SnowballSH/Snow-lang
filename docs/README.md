@@ -23,6 +23,8 @@ Currently under development, can only do things basic now
 | <=        | LTEQ         |
 | !         | NOT          |
 | !=        | NOTEQ        |
+| {         | LCURLY       |
+| }         | RCURLY       |
 | keywords  | KEYWORD      |
 
 

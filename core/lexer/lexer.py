@@ -60,6 +60,11 @@ class Lexer:
                 self.next()
                 continue
 
+            if self.current == "#":
+                while self.current is not None and self.current != "\n":
+                    self.next()
+                continue
+
             # get result from cogs
             for cog in cogs:
                 res = cog.lex(self)

@@ -12,6 +12,11 @@
             * loop until eof or } :
                 * get _Expr_
             * }
+            * if there is else
+                * {
+                * loop until eof or } :
+                    * get _Expr_
+                * }
             
     * return get Comp
 
