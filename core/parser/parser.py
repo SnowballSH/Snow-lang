@@ -31,6 +31,24 @@ class Parser:
 
         return self.nodes, None
 
+    def look_for_body(self):
+        if self.current.type != "LCURLY":
+            return None, SnowError.SyntaxError(self.current.start)
+
+        self.next()
+
+        children = []
+        while not self.eof() and self.current.type != "RCURLY":
+            body, e = self.expr()
+            if e:
+                return None, e
+            children.append(body)
+
+        if self.eof():
+            return None, SnowError.SyntaxError(self.current.end)
+
+        return children, None
+
     """EXPR"""
 
     def expr(self):
@@ -42,6 +60,7 @@ class Parser:
                 if e:
                     return None, e
                 return OutNode(res, start, res.end), None
+
             if self.current.value == "if":
                 start = self.current.start
                 self.next()
@@ -50,40 +69,18 @@ class Parser:
                 if e:
                     return None, e
 
-                if self.current.type != "LCURLY":
-                    return None, SyntaxError(self.current.start)
-
-                self.next()
-
-                children = []
-                while not self.eof() and self.current.type != "RCURLY":
-                    body, e = self.expr()
-                    if e:
-                        return None, e
-                    children.append(body)
-
-                if self.eof():
-                    return None, SnowError.SyntaxError(self.current.end)
+                children, e = self.look_for_body()
+                if e:
+                    return None, e
 
                 end = self.current.end
                 self.next()
 
                 if self.current.type == "KEYWORD" and self.current.value == "else":
                     self.next()
-                    if self.current.type != "LCURLY":
-                        return None, SyntaxError(self.current.start)
-
-                    self.next()
-
-                    else_children = []
-                    while not self.eof() and self.current.type != "RCURLY":
-                        body, e = self.expr()
-                        if e:
-                            return None, e
-                        else_children.append(body)
-
-                    if self.eof():
-                        return None, SnowError.SyntaxError(self.current.end)
+                    else_children, e = self.look_for_body()
+                    if e:
+                        return None, e
 
                     end = self.current.end
                     self.next()
@@ -96,25 +93,31 @@ class Parser:
             if self.current.value == "loop":
                 start = self.current.start
                 self.next()
-                if self.current.type != "LCURLY":
-                    return None, SyntaxError(self.current.start)
 
-                self.next()
-
-                children = []
-                while not self.eof() and self.current.type != "RCURLY":
-                    body, e = self.expr()
-                    if e:
-                        return None, e
-                    children.append(body)
-
-                if self.eof():
-                    return None, SnowError.SyntaxError(self.current.end)
+                children, e = self.look_for_body()
+                if e:
+                    return None, e
 
                 end = self.current.end
                 self.next()
 
                 return LoopNode(children, start, end), None
+
+            if self.current.value == "repeat":
+                start = self.current.start
+                self.next()
+                times, e = self.comp()
+                if e:
+                    return None, e
+
+                children, e = self.look_for_body()
+                if e:
+                    return None, e
+
+                end = self.current.end
+                self.next()
+
+                return RepeatNode(times, children, start, end), None
 
             if self.current.value == "break":
                 start = self.current.start

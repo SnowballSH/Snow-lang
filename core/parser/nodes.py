@@ -13,6 +13,18 @@ class NumberNode(Node):
         return f"{self.value}"
 
 
+class FuncAssignNode(Node):
+    def __init__(self, name, value, start, end):
+        self.name = name
+        self.value = value
+        self.start = start
+        self.end = end
+        self.type = "VarAssign"
+
+    def __repr__(self):
+        return f"{self.name} = {self.value}"
+
+
 class VarAccessNode(Node):
     def __init__(self, value, start, end):
         self.value = value
@@ -81,6 +93,18 @@ class LoopNode(Node):
 
     def __repr__(self):
         return f"loop {self.children}"
+
+
+class RepeatNode(Node):
+    def __init__(self, times, children, start, end):
+        self.times = times
+        self.children = children
+        self.start = start
+        self.end = end
+        self.type = "Repeat"
+
+    def __repr__(self):
+        return f"repeat {self.times} times {self.children}"
 
 
 class BreakNode(Node):

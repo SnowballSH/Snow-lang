@@ -1,1 +1,6 @@
-i=0loop{if i>5{break}else{out i+i*i i=i+1}}
+i = 0  # init i
+repeat i + 6
+  {
+    out i + i * i  # output something
+    i = i + 1  # add 1 to i
+  }

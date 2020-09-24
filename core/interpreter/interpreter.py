@@ -77,6 +77,29 @@ class Interpreter:
 
             return Void(node.start, node.end), None
 
+        if node.type == "Repeat":
+            times, e = self.visit(node.times)
+            if e:
+                return None, e
+
+            times = times.value
+            if type(times) is not int:
+                return None, SnowError.TypeError(node.times.start, f"Expected type integer Number, got '{times}'")
+
+            for _ in range(times):
+                for child in node.children:
+                    res, e = self.visit(child)
+                    if e:
+                        return None, e
+                    if self.to_break:
+                        break
+
+                if self.to_break:
+                    self.to_break = False
+                    break
+
+            return Void(node.start, node.end), None
+
         if node.type == "Break":
             self.to_break = True
             return Void(node.start, node.end), None
