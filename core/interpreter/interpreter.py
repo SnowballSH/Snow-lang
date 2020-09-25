@@ -12,6 +12,8 @@ class Interpreter:
     def __init__(self, nodes, stdout, tree=None):
         if tree is None:
             self.tree = {}
+        else:
+            self.tree = tree
         self.builtin = {"Void": lambda *a: Void(*a), "True": lambda *a: Bool(True, *a),
                         "False": lambda *a: Bool(False, *a)}
         self.stdout = stdout
@@ -38,7 +40,10 @@ class Interpreter:
             res, e = self.visit(node.child)
             if e:
                 return None, e
-            print(res.value, file=self.stdout)
+
+            value = res.value
+
+            print(value, file=self.stdout)
 
             return Void(node.start, res.end), None
 
@@ -103,6 +108,74 @@ class Interpreter:
         if node.type == "Break":
             self.to_break = True
             return Void(node.start, node.end), None
+
+        if node.type == "FuncAssign":
+            name, args, body = node.name, node.args, node.body
+
+            if node.name in self.builtin.keys():
+                return None, SnowError.OverrideError(node.start, f"Cannot override builtin: '{node.name}'")
+
+            self.tree[node.name] = Function(node.start, node.end, name, args, body)
+            return Void(node.start, node.end), None
+
+        if node.type == "FuncAccess":
+            if node.name in self.tree:
+                func = self.tree[node.name]
+                if not func.callable:
+                    return None, SnowError.NotCallableError(node.start, func.type)
+
+                body = func.body
+                tree = {}
+                tree.update(self.builtin)
+                tree.update(self.tree)
+
+                if len(node.args) > len(func.args):
+                    return None, SnowError.ArgumentError(node.args[len(func.args)].start, "unexpected argument(s)")
+                if len(node.args) < len(func.args):
+                    return None, SnowError.ArgumentError(node.args[-1].end, "too less argument(s)")
+
+                args = []
+                for a in node.args:
+                    res, e = self.visit(a)
+                    if e:
+                        return None, e
+                    args.append(res)
+
+                tree.update([*zip(func.args, args)])
+                inter = Interpreter(body, self.stdout, tree=tree)
+                res, e = inter.run()
+                if e:
+                    return None, e
+
+                return Void(node.start, node.end), None
+
+            elif node.name in self.builtin:
+                func: Function = self.builtin[node.name]
+                if not func.callable:
+                    return None, SnowError.NotCallableError(node.start, func.type)
+                body = func.body
+                tree = {}
+                tree.update(self.builtin)
+                tree.update(self.tree)
+                if len(node.args) > len(func.args):
+                    return None, SnowError.ArgumentError(node.args[len(func.args)].start, "unexpected argument(s)")
+                if len(node.args) < len(func.args):
+                    return None, SnowError.ArgumentError(node.args[-1].end, "too less argument(s)")
+                args = []
+                for a in node.args:
+                    res, e = self.visit(a)
+                    if e:
+                        return None, e
+                    args.append(res)
+                tree.update([*zip(func.args, args)])
+                inter = Interpreter(body, self.stdout, tree=tree)
+                res, e = inter.run()
+                if e:
+                    return None, e
+                return Void(node.start, node.end), None
+
+            else:
+                return None, SnowError.UndefinedError(node.start, node.name)
 
         if node.type == "VarAccess":
             if node.value in self.tree:

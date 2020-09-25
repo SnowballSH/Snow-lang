@@ -31,15 +31,18 @@ class Parser:
 
         return self.nodes, None
 
-    def look_for_body(self):
-        if self.current.type != "LCURLY":
+    def look_for_body(self, start="LCURLY", end="RCURLY", method=None):
+        if method is None:
+            method = self.expr
+
+        if self.current.type != start:
             return None, SnowError.SyntaxError(self.current.start)
 
         self.next()
 
         children = []
-        while not self.eof() and self.current.type != "RCURLY":
-            body, e = self.expr()
+        while not self.eof() and self.current.type != end:
+            body, e = method()
             if e:
                 return None, e
             children.append(body)
@@ -60,6 +63,30 @@ class Parser:
                 if e:
                     return None, e
                 return OutNode(res, start, res.end), None
+
+            if self.current.value == "fn":
+                start = self.current.start
+                self.next()
+
+                if self.current.type != "ID":
+                    return None, SnowError.SyntaxError(self.current.start)
+
+                name = self.current.value
+                self.next()
+
+                args, e = self.look_for_body(start="LPAREN", end="RPAREN", method=self.get_id)
+                if e:
+                    return None, e
+
+                self.next()
+                body, e = self.look_for_body()
+                if e:
+                    return None, e
+
+                end = self.current.end
+                self.next()
+
+                return FuncAssignNode(name, args, body, start, end), None
 
             if self.current.value == "if":
                 start = self.current.start
@@ -211,11 +238,22 @@ class Parser:
             self.next()
             return NumberNode(current.value, current.start, current.end), None
 
+        res, e = self.id()
+        if e:
+            return None, e
+
+        if res:
+            return res, None
+
+        return None, SnowError.SyntaxError(self.current.start)
+
+    def id(self, required=False):
+        current = self.current
         # ID
         if current.type == "ID":
             # Identifier
-            self.next()
             name = current.value
+            self.next()
             if self.current.type == "EQ":
                 self.next()
                 value, e = self.expr()
@@ -230,6 +268,24 @@ class Parser:
                     return None, e
                 return WalrusVarAssignNode(name, value, current.start, self.current.end), None
 
+            if self.current.type == "LPAREN":
+                res, e = self.look_for_body("LPAREN", "RPAREN", self.comp)
+                if e:
+                    return None, e
+                end = self.current.end
+                self.next()
+
+                return FuncAccessNode(name, res, current.start, end), None
+
             return VarAccessNode(name, current.start, current.end), None
 
-        return None, SnowError.SyntaxError(self.current.start)
+        if required:
+            return None, SnowError.SyntaxError(current.start)
+        return None, None
+
+    def get_id(self):
+        if self.current.type != "ID":
+            return None, SnowError.SyntaxError(self.current.start)
+        name_ = self.current.value
+        self.next()
+        return name_, None

@@ -14,15 +14,28 @@ class NumberNode(Node):
 
 
 class FuncAssignNode(Node):
-    def __init__(self, name, value, start, end):
+    def __init__(self, name, args, body, start, end):
         self.name = name
-        self.value = value
+        self.args = args
+        self.body = body
         self.start = start
         self.end = end
-        self.type = "VarAssign"
+        self.type = "FuncAssign"
 
     def __repr__(self):
-        return f"{self.name} = {self.value}"
+        return f"fn {self.name} => {self.body}"
+
+
+class FuncAccessNode(Node):
+    def __init__(self, name, args, start, end):
+        self.name = name
+        self.args = args
+        self.start = start
+        self.end = end
+        self.type = "FuncAccess"
+
+    def __repr__(self):
+        return f"{self.name}({self.args})"
 
 
 class VarAccessNode(Node):
