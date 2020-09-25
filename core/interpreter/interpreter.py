@@ -4,12 +4,14 @@ from .types import *
 from ..errors.error import *
 
 import os
+import sys
 
+sys.setrecursionlimit(10 ** 5)
 d = os.getcwd()
 
 
 class Interpreter:
-    def __init__(self, nodes, stdout, tree=None):
+    def __init__(self, nodes, stdout, tree=None, depth=0):
         if tree is None:
             self.tree = {}
         else:
@@ -18,12 +20,12 @@ class Interpreter:
                         "False": lambda *a: Bool(False, *a)}
         self.stdout = stdout
         self.nodes = nodes
+        self.depth = depth
 
         self.to_break = False
         self.to_return = False
 
     def run(self):
-
         for node in self.nodes:
             res, e = self.visit(node)
             if e:
@@ -133,7 +135,6 @@ class Interpreter:
             return Void(node.start, node.end), None
 
         if node.type == "FuncAccess":
-            self.to_return = Void(node.start, node.end)
             if node.name in self.tree:
                 func = self.tree[node.name]
                 if not func.callable:
@@ -141,7 +142,6 @@ class Interpreter:
 
                 body = func.body
                 tree = {}
-                tree.update(self.builtin)
                 tree.update(self.tree)
 
                 if len(node.args) > len(func.args):
@@ -158,7 +158,7 @@ class Interpreter:
                     args.append(res)
 
                 tree.update([*zip(func.args, args)])
-                inter = Interpreter(body, self.stdout, tree=tree)
+                inter = Interpreter(body, self.stdout, tree=tree, depth=self.depth + 1)
                 res, e = inter.run()
                 if e:
                     return None, e
@@ -174,7 +174,6 @@ class Interpreter:
                     return None, SnowError.NotCallableError(node.start, func.type)
                 body = func.body
                 tree = {}
-                tree.update(self.builtin)
                 tree.update(self.tree)
                 if len(node.args) > len(func.args):
                     return None, SnowError.ArgumentError(node.args[len(func.args)].start, "unexpected argument(s)")
@@ -188,7 +187,7 @@ class Interpreter:
                         return None, e
                     args.append(res)
                 tree.update([*zip(func.args, args)])
-                inter = Interpreter(body, self.stdout, tree=tree)
+                inter = Interpreter(body, self.stdout, tree=tree, depth=self.depth + 1)
                 res, e = inter.run()
                 if e:
                     return None, e

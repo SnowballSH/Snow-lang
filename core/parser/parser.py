@@ -2,6 +2,10 @@ from .nodes import *
 from ..lexer.tokens import Token
 from ..errors.error import *
 
+from ..lexer.cogs.symbols import ref
+
+ref = {v: k for k, v in ref.items()}
+
 COMPARISONS = ("LT", "GT", "LTEQ", "GTEQ", "DBEQ", "NOTEQ")
 
 
@@ -31,24 +35,32 @@ class Parser:
 
         return self.nodes, None
 
-    def look_for_body(self, start="LCURLY", end="RCURLY", method=None):
+    def look_for_body(self, start="LCURLY", end="RCURLY", method=None, split=None):
         if method is None:
             method = self.expr
 
         if self.current.type != start:
-            return None, SnowError.SyntaxError(self.current.start)
+            return None, SnowError.SyntaxError(self.current.start, f"Expected '{ref[start]}'")
 
         self.next()
 
         children = []
+        body, e = method()
+        if e:
+            return None, e
+        children.append(body)
         while not self.eof() and self.current.type != end:
+            if split is not None:
+                if self.current.type != split:
+                    return None, SnowError.SyntaxError(self.current.start, f"Expected '{ref[split]}'")
+                self.next()
             body, e = method()
             if e:
                 return None, e
             children.append(body)
 
         if self.eof():
-            return None, SnowError.SyntaxError(self.current.end)
+            return None, SnowError.SyntaxError(self.current.end, f"Expected '{ref[end]}'")
 
         return children, None
 
@@ -69,12 +81,12 @@ class Parser:
                 self.next()
 
                 if self.current.type != "ID":
-                    return None, SnowError.SyntaxError(self.current.start)
+                    return None, SnowError.SyntaxError(self.current.start, f"Expected identifier")
 
                 name = self.current.value
                 self.next()
 
-                args, e = self.look_for_body(start="LPAREN", end="RPAREN", method=self.get_id)
+                args, e = self.look_for_body(start="LPAREN", end="RPAREN", method=self.get_id, split="COMMA")
                 if e:
                     return None, e
 
@@ -237,7 +249,7 @@ class Parser:
                 return None, e
 
             if self.current.type != "RPAREN":
-                return None, SnowError.SyntaxError(self.current.start)
+                return None, SnowError.SyntaxError(self.current.start, f"Expected closing parenthesis")
 
             self.next()
             return res, None
@@ -278,7 +290,7 @@ class Parser:
                 return WalrusVarAssignNode(name, value, current.start, self.current.end), None
 
             if self.current.type == "LPAREN":
-                res, e = self.look_for_body("LPAREN", "RPAREN", self.comp)
+                res, e = self.look_for_body("LPAREN", "RPAREN", method=self.comp, split="COMMA")
                 if e:
                     return None, e
                 end = self.current.end
@@ -289,12 +301,12 @@ class Parser:
             return VarAccessNode(name, current.start, current.end), None
 
         if required:
-            return None, SnowError.SyntaxError(current.start)
+            return None, SnowError.SyntaxError(current.start, f"Expected identifier")
         return None, None
 
     def get_id(self):
         if self.current.type != "ID":
-            return None, SnowError.SyntaxError(self.current.start)
+            return None, SnowError.SyntaxError(self.current.start, f"Expected identifier")
         name_ = self.current.value
         self.next()
         return name_, None

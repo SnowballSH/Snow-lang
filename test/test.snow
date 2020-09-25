@@ -1,8 +1,18 @@
-fn function(a b) {return (a*b+a/b + INTEGER)}  # Create a function, but access variables defined later
-i = function  # Create alias of a function
-fn put(n) {out n}
-INTEGER = 969
+fn fib(n) {
+    a = 0
+    b = 1
+    repeat n {
+        h = b
+        a = b
+        b = a + h
+    }
+    return a
+}
 
-out i(4 7)  # Call it, separate arguments by space (half ruby syntax)
+out (long:=fib(500))
 
-# OUTPUT: 997.5714285714286
+fn f(n){a=0b=1repeat n{h=b a=b b=a+h}return a}
+
+out (short:=f(500))
+
+out long == short

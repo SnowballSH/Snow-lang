@@ -46,7 +46,7 @@ class VarAccessNode(Node):
         self.type = "VarAccess"
 
     def __repr__(self):
-        return f"{self.value}"
+        return f"access({self.value})"
 
 
 class VarAssignNode(Node):
