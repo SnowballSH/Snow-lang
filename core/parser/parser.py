@@ -152,6 +152,15 @@ class Parser:
                 self.next()
                 return BreakNode(start, end), None
 
+            if self.current.value == "return":
+                start = self.current.start
+                self.next()
+                child, e = self.expr()
+                if e:
+                    return None, e
+                end = self.current.end
+                return ReturnNode(child, start, end), None
+
         res, e = self.comp()
         if e:
             return None, e

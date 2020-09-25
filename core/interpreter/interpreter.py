@@ -20,15 +20,21 @@ class Interpreter:
         self.nodes = nodes
 
         self.to_break = False
+        self.to_return = False
 
     def run(self):
-        res = None
+
         for node in self.nodes:
             res, e = self.visit(node)
             if e:
                 return None, e
 
-        return res, None
+            if self.to_return:
+                to_return = self.to_return
+                self.to_return = None
+                return to_return, None
+
+        return None, None
 
     def visit(self, node):
         """
@@ -109,6 +115,14 @@ class Interpreter:
             self.to_break = True
             return Void(node.start, node.end), None
 
+        if node.type == "Return":
+            if self.to_return is None:
+                return None, SnowError.SyntaxError(node.start, "return outside function")
+            self.to_return, e = self.visit(node.child)
+            if e:
+                return None, e
+            return Void(node.start, node.end), None
+
         if node.type == "FuncAssign":
             name, args, body = node.name, node.args, node.body
 
@@ -119,6 +133,7 @@ class Interpreter:
             return Void(node.start, node.end), None
 
         if node.type == "FuncAccess":
+            self.to_return = Void(node.start, node.end)
             if node.name in self.tree:
                 func = self.tree[node.name]
                 if not func.callable:
@@ -135,6 +150,7 @@ class Interpreter:
                     return None, SnowError.ArgumentError(node.args[-1].end, "too less argument(s)")
 
                 args = []
+                to_return = Void(node.start, node.end)
                 for a in node.args:
                     res, e = self.visit(a)
                     if e:
@@ -147,7 +163,10 @@ class Interpreter:
                 if e:
                     return None, e
 
-                return Void(node.start, node.end), None
+                if res is not None:
+                    to_return = res
+
+                return to_return, None
 
             elif node.name in self.builtin:
                 func: Function = self.builtin[node.name]
@@ -162,6 +181,7 @@ class Interpreter:
                 if len(node.args) < len(func.args):
                     return None, SnowError.ArgumentError(node.args[-1].end, "too less argument(s)")
                 args = []
+                to_return = Void(node.start, node.end)
                 for a in node.args:
                     res, e = self.visit(a)
                     if e:
@@ -172,7 +192,9 @@ class Interpreter:
                 res, e = inter.run()
                 if e:
                     return None, e
-                return Void(node.start, node.end), None
+                if res is not None:
+                    to_return = res
+                return to_return, None
 
             else:
                 return None, SnowError.UndefinedError(node.start, node.name)

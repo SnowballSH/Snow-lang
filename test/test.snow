@@ -1,8 +1,8 @@
-fn function(a b) {put(a*b+a/b + INTEGER)}  # Create a function, but access variables defined later
+fn function(a b) {return (a*b+a/b + INTEGER)}  # Create a function, but access variables defined later
 i = function  # Create alias of a function
 fn put(n) {out n}
 INTEGER = 969
 
-i(4 7)  # Call it, separate arguments by space (half ruby syntax)
+out i(4 7)  # Call it, separate arguments by space (half ruby syntax)
 
 # OUTPUT: 997.5714285714286

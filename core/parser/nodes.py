@@ -130,6 +130,17 @@ class BreakNode(Node):
         return f"break"
 
 
+class ReturnNode(Node):
+    def __init__(self, child, start, end):
+        self.child = child
+        self.start = start
+        self.end = end
+        self.type = "Return"
+
+    def __repr__(self):
+        return f"return {self.child}"
+
+
 class OperationNode(Node):
     def __init__(self, left, op, right):
         self.left = left

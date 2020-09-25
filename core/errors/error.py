@@ -1,7 +1,7 @@
 class SnowError:
     class SyntaxError:
-        def __init__(self, pos):
-            self.message = "Invalid Syntax"
+        def __init__(self, pos, message="Invalid Syntax"):
+            self.message = message
             self.pos = pos
 
         def __repr__(self):
