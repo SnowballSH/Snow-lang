@@ -62,12 +62,12 @@ out 3 >= 2
 
 These are all of the data types in Snow:
 
-| Name     | About      | Callable |
-|----------|------------|----------|
-| Number   | any number | No       |
-| Void     | Void/None  | No       |
-| Bool     | True/False | No       |
-| Function | Function   | Yes      |
+| Name     | About      | Callable | Example |
+|----------|------------|----------|---------|
+| Number   | Any number | No       | 1.3     |
+| Void     | Void/None  | No       | Void    |
+| Bool     | True/False | No       | True    |
+| Function | Function   | Yes      | fn (){} |
 
 ### Variables
 
