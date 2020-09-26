@@ -141,3 +141,48 @@ if 1 == 2 {
     1
     True
 ```
+
+### Loops
+
+##### Basic loop
+
+A basic loop in Snow means an infinite loop, using 'loop' keyword
+
+```python
+i = 0
+loop {
+  out i
+  i = i + 1
+  if i > 5 {
+    break  # break out the infinite loop
+  }
+}
+>>> 0
+    1
+    2
+    3
+    4
+    5
+```
+
+##### Repeat
+
+By using 'repeat' keyword, you can repeat some code n times.
+
+Syntax: `repeat <int> { <do something> }`
+
+The last example can be easier done by:
+```python
+i = 0
+repeat 6 {
+  out i
+  i = i + 1
+}
+>>> 0
+    1
+    2
+    3
+    4
+    5
+```
+
