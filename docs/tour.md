@@ -186,3 +186,46 @@ repeat 6 {
     5
 ```
 
+_Note: breaking inside a repeat is also allowed_
+
+### Functions
+
+Syntax: `fn <name> ( <args separated by ','> ) { <do something> }`
+
+_Note: Fonctions has their own variable tree, so you cannot access variables created inside from outer scope or another function._
+
+```python
+# fibonacci sequence in Snow
+fn fib(n) {
+    a = 0
+    b = 1
+    repeat n {
+        h = b
+        a = b
+        b = a + h
+    }
+    return a
+}
+out (long := fib(500))
+>>> (a big number)
+
+# Shrink the code
+fn f(n){a=0b=1repeat n{h=b a=b b=a+h}return a}
+out (short := f(500))
+>>> (the same big number)
+
+out long == short
+>>> True
+```
+
+### Errors
+
+Errors are pretty straight forward, since it provides details on what you did wrong.
+
+It also points out the Error char and position
+
+### Shrink the code!
+
+In Snow, you can make code even shorter than ruby and python.
+
+For example, fibonacci sequence can be made by `fn f(n){a=0b=1repeat n{h=b a=b b=a+h}return a}` 😎
