@@ -1,6 +1,6 @@
-## Language Tour
+# Language Tour
 
-#### Comments
+### Comments
 
 You are able to use comments in Snow, by character '#'.
 
