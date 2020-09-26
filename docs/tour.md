@@ -9,7 +9,7 @@ You are able to use comments in Snow, by character '#'.
 i = 1  # I am also a comment
 ```
 
-#### Numbers
+### Numbers
 
 You are able to use integers and floats in Snow.
 
@@ -21,7 +21,7 @@ You are able to use integers and floats in Snow.
 
 **Snow doesn't support unary numbers until now. It will be added in a few commits.**
 
-#### Operators
+### Operators
 
 You can use +-*/ operators, like in any other languages.
 
@@ -29,7 +29,7 @@ You can use +-*/ operators, like in any other languages.
 3.8 + 2.7 / (2 - 3)
 ```
 
-#### Print something
+### Print something
 
 ##### Basic
 
@@ -49,7 +49,7 @@ out(2-8)*4-1
 >>> -25
 ```
 
-#### Comparisons
+### Comparisons
 
 You can use comparisons as any other languages.
 
@@ -58,7 +58,7 @@ out 3 >= 2
 >>> True  # comparisons returns type 'Bool'
 ```
 
-#### Data types
+### Data types
 
 These are all of the data types in Snow:
 
@@ -69,7 +69,7 @@ These are all of the data types in Snow:
 | Bool     | True/False | No       |
 | Function | Function   | Yes      |
 
-#### Variables
+### Variables
 
 ##### Assign Variables
 
@@ -94,8 +94,50 @@ out u
 
 ```python
 # Use (<identifier> := <value>)
+# Don't forget the parenthesis!
 out(u:=4-3)  # Shorter code than the last example
 >>> 1
 out u  # You can still access it
 >>> 1
+```
+
+### If statement
+
+Syntax:
+```python
+if <statement> { <do something> } 
+if <statement> { <do something> } else { <do something else> }
+```
+
+##### Basic
+```python
+if 1 == 2 {
+  out Void  # it will never be triggered until Earth is eaten
+} else {
+  out True
+}
+>>> True
+
+# To shrink it:
+if 1==2{out Void}else{out True}
+>>> True
+```
+
+##### Nested if statements
+```python
+if 1 == 2 {
+  out Void
+} else {
+  out True
+  if 1 != 1 {
+    out False
+  }
+  if 1 >= 0 {
+    out 1
+    out 1 >= 0
+  }
+}
+>>> True
+    1
+    True
 ```
