@@ -4,7 +4,8 @@
 ***
 
 #### Usage
-Currently under development, can only do things basic now
+Snow Language version 0.5.0(Which is the first version after rewrite) will be on github and PyPi soon 😄
+See docs/tour.md for language tour!
 
 #### Tokens
 | Chars     | Token Type   |
@@ -25,6 +26,7 @@ Currently under development, can only do things basic now
 | !=        | NOTEQ        |
 | {         | LCURLY       |
 | }         | RCURLY       |
+| ,         | COMMA        |
 | keywords  | KEYWORD      |
 
 
