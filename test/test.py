@@ -1,3 +1,3 @@
-from app import app
+from SnowLang.app import app
 
 app.run("test.snow")
