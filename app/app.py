@@ -1,4 +1,4 @@
-from core.compiler.compiler import run as run_f
+from SnowLang.compiler.compiler import run as run_f
 
 import threading
 
