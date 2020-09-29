@@ -15,6 +15,13 @@ class SnowError:
         def __repr__(self):
             return f"Type Error: {self.message} at line {self.pos[0]}, char {self.pos[1]}"
 
+    class ZeroDivisionError:
+        def __init__(self, pos):
+            self.pos = pos
+
+        def __repr__(self):
+            return f"Zero Division Error: division by zero at line {self.pos[0]}, char {self.pos[1]}"
+
     class OverrideError:
         def __init__(self, pos, message):
             self.message = message
@@ -45,7 +52,8 @@ class SnowError:
             self.pos = pos
 
         def __repr__(self):
-            return f"Not Callable Error: type '{self.message}' is not callable at line {self.pos[0]}, char {self.pos[1]}"
+            return f"Not Callable Error: type '{self.message}' " \
+                   f"is not callable at line {self.pos[0]}, char {self.pos[1]}"
 
     class InvalidCharError:
         def __init__(self, pos):

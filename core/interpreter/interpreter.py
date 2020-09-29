@@ -294,8 +294,36 @@ class Interpreter:
 
             if op.type == "DIV":
                 if can_op(left) and can_op(right):
+                    if right.value == 0:
+                        return None, SnowError.ZeroDivisionError(right.start)
                     return Number(left.value / right.value, left.start, right.end), None
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for /: {left.type} and {right.type}")
+
+        if node.type == "UnaryOp":
+            op = node.op
+            right, e = self.visit(node.right)
+            if e:
+                return None, e
+
+            can_op = lambda n: isinstance(n, (Number, Bool))
+
+            if op.type == "ADD":
+                if can_op(right):
+                    return Number(right.value, op.start, right.end), None
+                return None, SnowError.TypeError(op.start,
+                                                 f"unsupported operand type for unary +: {right.type}")
+
+            if op.type == "MIN":
+                if can_op(right):
+                    return Number(- right.value, op.start, right.end), None
+                return None, SnowError.TypeError(op.start,
+                                                 f"unsupported operand type for unary -: {right.type}")
+
+            if op.type == "NOT":
+                if can_op(right):
+                    return Bool(not right.value, op.start, right.end), None
+                return None, SnowError.TypeError(op.start,
+                                                 f"unsupported operand type for unary !: {right.type}")
 
         raise Exception(f"BROKEN: {node}")

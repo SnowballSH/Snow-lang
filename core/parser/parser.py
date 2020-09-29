@@ -45,10 +45,11 @@ class Parser:
         self.next()
 
         children = []
-        body, e = method()
-        if e:
-            return None, e
-        children.append(body)
+        if self.current.type != end:
+            body, e = method()
+            if e:
+                return None, e
+            children.append(body)
         while not self.eof() and self.current.type != end:
             if split is not None:
                 if self.current.type != split:
@@ -221,7 +222,7 @@ class Parser:
         return left, None
 
     def layer_2(self):
-        left, e = self.factor()
+        left, e = self.unary()
         if e:
             return None, e
 
@@ -229,7 +230,7 @@ class Parser:
             op = self.current
             self.next()
 
-            right, e = self.factor()
+            right, e = self.unary()
             if e:
                 return None, e
 
@@ -238,6 +239,21 @@ class Parser:
         return left, None
 
     """FACTOR"""
+
+    def unary(self):
+        if self.current.type in ("NOT", "ADD", "MIN"):
+            op = self.current
+            self.next()
+            right, e = self.factor()
+            if e:
+                return None, e
+            return UnaryOpNode(op, right), None
+
+        res, e = self.factor()
+        if e:
+            return None, e
+
+        return res, e
 
     def factor(self):
         current = self.current

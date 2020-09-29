@@ -154,6 +154,18 @@ class OperationNode(Node):
         return f"({self.left} {self.op.value} {self.right})"
 
 
+class UnaryOpNode(Node):
+    def __init__(self, op, right):
+        self.op = op
+        self.right = right
+        self.start = self.op.start
+        self.end = self.right.end
+        self.type = "UnaryOp"
+
+    def __repr__(self):
+        return f"({self.op.value}{self.right})"
+
+
 class ComparisonNode(Node):
     def __init__(self, left, comp, right):
         self.left = left

@@ -1,18 +1,1 @@
-fn fib(n) {
-    a = 0
-    b = 1
-    repeat n {
-        h = b
-        a = b
-        b = a + h
-    }
-    return a
-}
-
-out (long:=fib(500))
-
-fn f(n){a=0b=1repeat n{h=b a=b b=a+h}return a}
-
-out (short:=f(500))
-
-out long == short
+out ! (0 / (-9 * -7))
