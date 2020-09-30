@@ -1,5 +1,5 @@
-from SnowLang.app import app
-from SnowLang.compiler import compiler
+from .app.app import *
+from .compiler.compiler import *
 
 __title__ = 'SnowLang'
 __author__ = 'SnowballSH'
