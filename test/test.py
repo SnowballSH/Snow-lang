@@ -1,3 +1,3 @@
 from subprocess import run
 
-run(["python", "../cli.py", "test.snow"])
+run(["python", "../SnowLang/app/cli.py", "test.snow"])
