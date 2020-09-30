@@ -30,7 +30,7 @@ setup(name="SnowLang",
       install_requires=requirements,
       python_requires=">=3.6",
       url="https://github.com/SnowballSH/Snow-lang",
-      download_url="https://github.com/SnowballSH/Snow-lang/archive/v0.5.1.5.tar.gz",
+      download_url="https://github.com/SnowballSH/Snow-lang/archive/v0.5.1.6.tar.gz",
       classifiers=[
           "Development Status :: 5 - Production/Stable",
           "Intended Audience :: Developers",
