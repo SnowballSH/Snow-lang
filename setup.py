@@ -27,7 +27,7 @@ setup(name="SnowLang",
           "SnowLang.interpreter",
           "SnowLang.lexer",
           "SnowLang.lexer.cogs",
-          "SnowLang.lexer.cogs.keywords.json"
+          "SnowLang.lexer.cogs.keywords.json",
           "SnowLang.parser",
           "docs",
                 ],
