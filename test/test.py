@@ -1,3 +1,3 @@
-from SnowLang import app
+from subprocess import run
 
-app.run("test.snow")
+run(["python", "../cli.py", "test.snow"])

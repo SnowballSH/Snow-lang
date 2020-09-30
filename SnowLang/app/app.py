@@ -18,6 +18,10 @@ def run(filename, stdout="snow.stdout", stderr="snow.stderr"):
     app = AppThread(filename)
     app.start()
     while app.is_alive():
+        with open(stdout, "w"):
+            pass
+        with open(stderr, "w"):
+            pass
         with open(stdout, "r") as out:
             f_out = out.read()
             if f_out != old_out:
