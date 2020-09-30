@@ -191,7 +191,7 @@ _Note: breaking inside a repeat is also allowed_
 
 Syntax: `fn <name> ( <args separated by ','> ) { <do something> }`
 
-_Note: Fonctions has their own variable tree, so you cannot access variables created inside from outer scope or another function._
+_Note: Functions has their own variable tree, so you cannot access variables created inside from outer scope or another function._
 
 ```python
 # fibonacci sequence in Snow
