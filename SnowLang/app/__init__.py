@@ -1,5 +1,4 @@
-from .app import app
-from .compiler import compiler
+from . import app
 
 __title__ = 'SnowLang'
 __author__ = 'SnowballSH'
