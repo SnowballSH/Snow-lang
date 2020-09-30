@@ -14,11 +14,9 @@ try:
 except FileNotFoundError:
     pass
 
-'''
-with open("docs/README.md", "r") as f:
-    readme = f.read()'''
 
-readme = "## Snow Programming Language"
+with open("docs/README.md", "r") as f:
+    readme = f.read()
 
 setup(name="SnowLang",
       packages=["SnowLang"],
