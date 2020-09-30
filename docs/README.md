@@ -1,5 +1,4 @@
 ## Snow Programming Language 
-### Help - Contribution
 
 ***
 
