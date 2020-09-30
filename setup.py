@@ -19,6 +19,7 @@ with open("docs/README.md", "r") as f:
 
 setup(name="SnowLang",
       packages=[
+          ".",
           "SnowLang",
           "SnowLang.app",
           "SnowLang.compiler",
