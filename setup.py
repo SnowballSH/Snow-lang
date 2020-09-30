@@ -14,7 +14,6 @@ try:
 except FileNotFoundError:
     pass
 
-
 with open("docs/README.md", "r") as f:
     readme = f.read()
 
@@ -29,7 +28,8 @@ setup(name="SnowLang",
           "SnowLang.lexer.cogs",
           "SnowLang.parser",
           "docs",
-                ],
+      ],
+      include_package_data=True,
       author="SnowballSH",
       version=version,
       description="Snow Programming Language for beginners",
