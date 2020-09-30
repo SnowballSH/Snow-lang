@@ -3,29 +3,31 @@
 
 ***
 
-#### Structure
-* app - the app
-   * app - the main file with threads
-   
-* core - main code folder
-   * compiler - run the file
-       * compiler.py
-   * errors - all custom errors
-       * error.py
-       * pointer.py
-   * lexer - the lexer
-       * cogs - add-ons
-          * identifier.py
-          * keywords.json
-          * numbers.py
-          * operators.py
-          * symbols.py
-       * lexer.py
-       * tokens.py
-   * parser - the parser
-       * parser.py
-       * nodes.py
-   * interpreter - the interpreter
-       * interpreter.py
-       * types.py
-   
+#### Tokens
+| Chars     | Token Type   |
+|-----------|--------------|
+| \d+.\d+   | INT \| FLOAT |
+| A-Za-z_\d | ID           |
+| (         | LPAREN       |
+| )         | RPAREN       |
+| =         | EQ           |
+| ==        | DBEQ         |
+| :         | COLON        |
+| :=        | WALRUS       |
+| >         | GT           |
+| <         | LT           |
+| >=        | GTEQ         |
+| <=        | LTEQ         |
+| !         | NOT          |
+| !=        | NOTEQ        |
+| {         | LCURLY       |
+| }         | RCURLY       |
+| ,         | COMMA        |
+| keywords  | KEYWORD      |
+
+
+#### Nodes
+See core/parser/nodes.py
+
+#### Types
+See core/interpreter/types.py
