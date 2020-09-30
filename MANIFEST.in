@@ -1,2 +1,1 @@
-graft docs
-graft SnowLang
+include SnowLang/lexer/cogs/keywords.json
