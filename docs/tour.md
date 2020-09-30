@@ -93,8 +93,7 @@ out u
 
 ```python
 # Use (<identifier> := <value>)
-# Don't forget the parenthesis!
-out(u:=4-3)  # Shorter code than the last example
+out u := 4 - 3  # Shorter code than the last example
 >>> 1
 out u  # You can still access it
 >>> 1
