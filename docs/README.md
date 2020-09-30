@@ -21,9 +21,9 @@ See the file `cli.py`?
 
 In cmd or powershell (or any OS system command line), do
 
-```
-python cli.py <filename>
-ex. python cli.py test.snow
+```python
+import SnowLang as Snow
+Snow.app.run("test.snow")
 ```
 
 **Be sure to be in the same directory has your Snow script**
