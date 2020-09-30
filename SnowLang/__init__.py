@@ -1,5 +1,5 @@
-from .app import app
-from .compiler import compiler
+from .app import *
+from .compiler import *
 
 __title__ = 'SnowLang'
 __author__ = 'SnowballSH'
