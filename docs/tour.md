@@ -17,9 +17,8 @@ You are able to use integers and floats in Snow.
 3  # an integer
 3.99  # a float
 3.  # a float: 3.0
+-3.4  # a float: -3.4
 ```
-
-**Snow doesn't support unary numbers until now. It will be added in a few commits.**
 
 ### Operators
 
