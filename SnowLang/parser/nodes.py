@@ -109,9 +109,10 @@ class LoopNode(Node):
 
 
 class RepeatNode(Node):
-    def __init__(self, times, children, start, end):
+    def __init__(self, times, children, as_, start, end):
         self.times = times
         self.children = children
+        self.as_ = as_
         self.start = start
         self.end = end
         self.type = "Repeat"

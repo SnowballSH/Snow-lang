@@ -144,11 +144,19 @@ class Parser:
                 return LoopNode(children, start, end), None
 
             if self.current.value == "repeat":
+                as_ = None
+
                 start = self.current.start
                 self.next()
                 times, e = self.comp()
                 if e:
                     return None, e
+
+                if self.current.type == "KEYWORD" and self.current.value == "as":
+                    self.next()
+                    as_, e = self.get_id()
+                    if e:
+                        return None, e
 
                 children, e = self.look_for_body()
                 if e:
@@ -157,7 +165,7 @@ class Parser:
                 end = self.current.end
                 self.next()
 
-                return RepeatNode(times, children, start, end), None
+                return RepeatNode(times, children, as_, start, end), None
 
             if self.current.value == "break":
                 start = self.current.start

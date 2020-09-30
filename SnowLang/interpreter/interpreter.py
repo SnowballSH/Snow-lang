@@ -2,6 +2,7 @@ from __future__ import print_function
 
 from .types import *
 from ..errors.error import *
+from ..parser.nodes import *
 
 import os
 import sys
@@ -99,7 +100,13 @@ class Interpreter:
             if type(times) is not int:
                 return None, SnowError.TypeError(node.times.start, f"Expected type integer Number, got '{times}'")
 
-            for _ in range(times):
+            for i in range(times):
+                if node.as_ is not None:
+                    new_node = VarAssignNode(node.as_, Number(i, node.start, node.end), node.times.end, node.end)
+                    _, e = self.visit(new_node)
+                    if e:
+                        return None, e
+
                 for child in node.children:
                     res, e = self.visit(child)
                     if e:

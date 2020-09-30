@@ -1,1 +1,1 @@
-kw = ["out", "if", "else", "loop", "repeat", "break", "fn", "return"]
+kw = ["out", "if", "else", "loop", "repeat", "as", "break", "fn", "return"]
