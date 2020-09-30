@@ -19,7 +19,17 @@ with open("docs/README.md", "r") as f:
     readme = f.read()
 
 setup(name="SnowLang",
-      packages=["SnowLang"],
+      packages=[
+          "SnowLang",
+          "SnowLang.app",
+          "SnowLang.compiler",
+          "SnowLang.errors",
+          "SnowLang.interpreter",
+          "SnowLang.lexer",
+          "SnowLang.lexer.cogs",
+          "SnowLang.parser",
+          "docs",
+                ],
       author="SnowballSH",
       version=version,
       description="Snow Programming Language for beginners",
