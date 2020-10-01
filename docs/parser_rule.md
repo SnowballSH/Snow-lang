@@ -4,19 +4,7 @@
 
 * **Expr**
     * Keywords
-        * Out
-            * get _Expr_
-        * If
-            * get _Comp_
-            * {
-            * loop until eof or } :
-                * get _Expr_
-            * }
-            * if there is else
-                * {
-                * loop until eof or } :
-                    * get _Expr_
-                * }
+        <lazy to show it>
             
     * return get Comp
 
@@ -35,8 +23,14 @@
     * return "left"
     
 * **Layer 2**
+    * get _Layer_3_ as "left"
+    * loop until eof or current is not in (*, /, //, %) :
+        * get _Layer 3_
+    * return "left"
+    
+* **Layer 3**
     * get _Factor_ as "left"
-    * loop until eof or current is not in (*, /) :
+    * loop until eof or current is not in (**,) :
         * get _Factor_
     * return "left"
     
