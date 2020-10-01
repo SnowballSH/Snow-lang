@@ -63,6 +63,13 @@ class SnowError:
         def __repr__(self):
             return f"Module Not Found: {self.message} at line {self.pos[0]}, char {self.pos[1]}"
 
+    class ModuleError:
+        def __init__(self, pos):
+            self.pos = pos
+
+        def __repr__(self):
+            return f"Module Error: error found in imported module at line {self.pos[0]}, char {self.pos[1]}"
+
     class InvalidCharError:
         def __init__(self, pos):
             self.message = "Invalid Character"

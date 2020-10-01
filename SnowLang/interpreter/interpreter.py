@@ -142,22 +142,26 @@ class Interpreter:
             except FileNotFoundError:
                 return None, SnowError.ModuleNotFoundError(node.start, node.name)
 
+            def raise_e():
+                print(f"Error found in <{node.name}>:\n{repr(e)}\n")
+                return None, SnowError.ModuleError(node.start)
+
             lexer = Lexer(code)
             res = lexer.lex()
             tokens, e = res
             if e:
-                return None, e
+                return raise_e()
 
             parser = Parser(tokens)
             res = parser.parse()
             nodes, e = res
             if e:
-                return None, e
+                return raise_e()
 
             inter = Interpreter(nodes, self.stdout)
             res, e = inter.run()
             if e:
-                return None, e
+                return raise_e()
 
             self.tree.update(inter.tree)
 
