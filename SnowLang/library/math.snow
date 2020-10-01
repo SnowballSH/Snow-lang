@@ -1,7 +1,6 @@
+# Math Lib
+
+# Deprecated
 fn pow(x, n) {
-    i = 1
-    repeat n {
-        i = i * x
-    }
-    return i
+    return x**n
 }

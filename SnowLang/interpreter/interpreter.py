@@ -342,6 +342,26 @@ class Interpreter:
                 return None, SnowError.TypeError(op.start,
                                                  f"unsupported operand type(s) for /: {left.type} and {right.type}")
 
+            if op.type == "INTDIV":
+                if can_op(left) and can_op(right):
+                    if right.value == 0:
+                        return None, SnowError.ZeroDivisionError(right.start)
+                    return Number(left.value // right.value, left.start, right.end), None
+                return None, SnowError.TypeError(op.start,
+                                                 f"unsupported operand type(s) for //: {left.type} and {right.type}")
+
+            if op.type == "MOD":
+                if can_op(left) and can_op(right):
+                    return Number(left.value % right.value, left.start, right.end), None
+                return None, SnowError.TypeError(op.start,
+                                                 f"unsupported operand type(s) for %: {left.type} and {right.type}")
+
+            if op.type == "POW":
+                if can_op(left) and can_op(right):
+                    return Number(left.value ** right.value, left.start, right.end), None
+                return None, SnowError.TypeError(op.start,
+                                                 f"unsupported operand type(s) for ^: {left.type} and {right.type}")
+
         if node.type == "UnaryOp":
             op = node.op
             right, e = self.visit(node.right)

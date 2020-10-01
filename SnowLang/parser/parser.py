@@ -239,11 +239,28 @@ class Parser:
         return left, None
 
     def layer_2(self):
+        left, e = self.layer_3()
+        if e:
+            return None, e
+
+        while not self.eof() and self.current.type in ("MUL", "DIV", "INTDIV", "MOD"):
+            op = self.current
+            self.next()
+
+            right, e = self.layer_3()
+            if e:
+                return None, e
+
+            left = OperationNode(left, op, right)
+
+        return left, None
+
+    def layer_3(self):
         left, e = self.unary()
         if e:
             return None, e
 
-        while not self.eof() and self.current.type in ("MUL", "DIV"):
+        while not self.eof() and self.current.type in ("POW",):
             op = self.current
             self.next()
 

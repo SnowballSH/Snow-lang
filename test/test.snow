@@ -1,3 +1,3 @@
-include math
+fn solution(k){return(-1)**k*k*(k+1)//2}
 
-out pow(2, 3)
+out solution(5)
