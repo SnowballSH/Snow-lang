@@ -4,6 +4,9 @@ from .types import *
 from ..errors.error import *
 from ..parser.nodes import *
 
+from ..lexer.lexer import Lexer
+from ..parser.parser import Parser
+
 import os
 import sys
 
@@ -130,6 +133,34 @@ class Interpreter:
             self.to_return, e = self.visit(node.child)
             if e:
                 return None, e
+            return Void(node.start, node.end), None
+
+        if node.type == "Include":
+            try:
+                with open(f"{os.path.dirname(__file__)}/../library/{node.name}.snow") as f:
+                    code = f.read()
+            except FileNotFoundError:
+                return None, SnowError.ModuleNotFoundError(node.start, node.name)
+
+            lexer = Lexer(code)
+            res = lexer.lex()
+            tokens, e = res
+            if e:
+                return None, e
+
+            parser = Parser(tokens)
+            res = parser.parse()
+            nodes, e = res
+            if e:
+                return None, e
+
+            inter = Interpreter(nodes, self.stdout)
+            res, e = inter.run()
+            if e:
+                return None, e
+
+            self.tree.update(inter.tree)
+
             return Void(node.start, node.end), None
 
         if node.type == "FuncAssign":

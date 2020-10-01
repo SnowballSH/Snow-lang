@@ -4,7 +4,6 @@ from ..interpreter.interpreter import Interpreter
 from ..errors.pointer import point
 
 import os
-import sys
 
 d = os.getcwd()
 

@@ -182,6 +182,15 @@ class Parser:
                 end = self.current.end
                 return ReturnNode(child, start, end), None
 
+            if self.current.value == "include":
+                start = self.current.start
+                self.next()
+                name, e = self.get_id()
+                if e:
+                    return None, e
+                end = self.current.end
+                return IncludeNode(name, start, end), None
+
         res, e = self.comp()
         if e:
             return None, e

@@ -142,6 +142,17 @@ class ReturnNode(Node):
         return f"return {self.child}"
 
 
+class IncludeNode(Node):
+    def __init__(self, name, start, end):
+        self.name = name
+        self.start = start
+        self.end = end
+        self.type = "Include"
+
+    def __repr__(self):
+        return f"include {self.name}"
+
+
 class OperationNode(Node):
     def __init__(self, left, op, right):
         self.left = left

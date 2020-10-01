@@ -55,6 +55,14 @@ class SnowError:
             return f"Not Callable Error: type '{self.message}' " \
                    f"is not callable at line {self.pos[0]}, char {self.pos[1]}"
 
+    class ModuleNotFoundError:
+        def __init__(self, pos, message):
+            self.message = message
+            self.pos = pos
+
+        def __repr__(self):
+            return f"Module Not Found: {self.message} at line {self.pos[0]}, char {self.pos[1]}"
+
     class InvalidCharError:
         def __init__(self, pos):
             self.message = "Invalid Character"
