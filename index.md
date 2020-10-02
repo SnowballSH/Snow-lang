@@ -10,10 +10,9 @@ See docs/tour.md for language tour!
 #### Download
 
 ```bash
+pip install -r requirements.txt
 python -m pip install git+https://github.com/SnowballSH/Snow-lang.git@master
 ```
-
-modules in `requirements.txt` must be installed.
 
 #### How to run my Snow script?
 
