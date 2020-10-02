@@ -1,3 +1,5 @@
-fn solution(k){return(-1)**k*k*(k+1)//2}
+fn test(void) {
+    out void
+}
 
-out solution(5)
+test(3)

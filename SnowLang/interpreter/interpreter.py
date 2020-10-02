@@ -173,6 +173,10 @@ class Interpreter:
             if node.name in self.builtin.keys():
                 return None, SnowError.OverrideError(node.start, f"Cannot override builtin: '{node.name}'")
 
+            for b in args:
+                if b in self.builtin.keys():
+                    return None, SnowError.OverrideError(node.start, f"Cannot override builtin: '{b}'")
+
             self.tree[node.name] = Function(node.start, node.end, name, args, body)
             return Void(node.start, node.end), None
 
