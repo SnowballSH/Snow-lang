@@ -3,3 +3,4 @@ fn test(void) {
 }
 
 test(3)
+out 3
